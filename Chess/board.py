@@ -88,74 +88,125 @@ class Board:
                 moveset = self._pawn_black_moves(row, col)
 #TODO rewrite the class methods to match the piece in the isinstance argument
         elif isinstance(piece, King):
-            if piece.player==W:
-                moveset = self._pawn_white_moves(row, col)
-            elif piece.player ==B:
-                moveset = self._pawn_black_moves(row, col)
+            if piece.player == W:
+                moveset = self._king_white_moves(row, col)
+            elif piece.player == B:
+                moveset = self._king_black_moves(row, col)
 
         elif isinstance(piece, Queen):
             if piece.player==W:
-                moveset = self._pawn_white_moves(row, col)
+                moveset = self._queen_white_moves(row, col)
             elif piece.player ==B:
-                moveset = self._pawn_black_moves(row, col)
+                moveset = self._queen_black_moves(row, col)
 
         elif isinstance(piece, Bishop):
             if piece.player==W:
-                moveset = self._pawn_white_moves(row, col)
+                moveset = self._bishop_white_moves(row, col)
             elif piece.player ==B:
-                moveset = self._pawn_black_moves(row, col)
+                moveset = self._bishop_black_moves(row, col)
 
 
         elif isinstance(piece, Knight):
             if piece.player==W:
-                moveset = self._pawn_white_moves(row, col)
+                moveset = self._knight_white_moves(row, col)
             elif piece.player ==B:
-                moveset = self._pawn_black_moves(row, col)
+                moveset = self._knight_black_moves(row, col)
 
 
         elif isinstance(piece, Rook):
             if piece.player==W:
-                moveset = self._pawn_white_moves(row, col)
+                moveset = self._rook_white_moves(row, col)
             elif piece.player ==B:
-                moveset = self._pawn_black_moves(row, col)
+                moveset = self._rook_black_moves(row, col)
 
         return moveset
 
-
-
-#TODO Add en passant and promotion to pawns, fix the right attack bug for white (check black)
+#TODO Add en passant and promotion to pawns
     def _pawn_white_moves(self, current_row, current_col):
         moves = [(current_row-1, current_col)]
-        right_attack = self.board[current_row-1][current_col+1]
-        left_attack = self.board[current_row-1][current_col-1]
+        if (current_col + 1) in range(COLS):
+            right_attack = self.board[current_row-1][current_col+1]
+            if isinstance(right_attack, Piece):
+                if right_attack.player == B:
+                    moves.append((current_row - 1, current_col + 1))
+        if (current_col - 1) in range(COLS):
+            left_attack = self.board[current_row - 1][current_col - 1]
+            if isinstance(left_attack, Piece):
+                if left_attack.player == B:
+                    moves.append((current_row-1, current_col-1))
         if current_row == 6:
             moves.append((current_row-2, current_col))
-        if isinstance(right_attack, Piece):
-            if right_attack.player == B:
-                moves.append((current_row-1, current_col+1))
-        if isinstance(left_attack, Piece):
-            if left_attack.player == B:
-                moves.append((current_row-1, current_col-1))
+        if self.board[current_row-1][current_col] != 0:
+            moves.remove((current_row-1, current_col))
+        if self.board[current_row-1][current_col] != 0 and current_row == 6:
+            moves.remove((current_row-1, current_col))
+            moves.remove((current_row - 2, current_col))
+        if self.board[current_row-2][current_col] != 0 and current_row == 6:
+            moves.remove((current_row-2, current_col))
         return moves
 
-    # def _pawn_black_moves(self, current_row, current_col):
-    #     moves = [(current_row+1, current_col)]
-    #     right_attack = self.board[current_row+1][current_col+1]
-    #     left_attack = self.board[current_row+1][current_col-1]
-    #     if current_row == 7:
-    #         moves.append((current_row+2, current_col))
-    #     if isinstance(right_attack, Piece):
-    #         if right_attack.player == W:
-    #             moves.append((current_row+1, current_col+1))
-    #     if isinstance(left_attack, Piece):
-    #         if right_attack.player == W:
-    #             moves.append((current_row+1, current_col-1))
-    #     return moves
-    #
-    # def _king_white_moves(self, current_row, current_col):
-    #
-    # def _king_black_moves(self, current_row, current_col):
-    #
+
+    def _pawn_black_moves(self, current_row, current_col):
+        moves = [(current_row + 1, current_col)]
+        if (current_col + 1) in range(COLS):
+            right_attack = self.board[current_row + 1][current_col + 1]
+            if isinstance(right_attack, Piece):
+                if right_attack.player == W:
+                    moves.append((current_row + 1, current_col + 1))
+        if (current_col - 1) in range(COLS):
+            left_attack = self.board[current_row + 1][current_col - 1]
+            if isinstance(left_attack, Piece):
+                if left_attack.player == W:
+                    moves.append((current_row + 1, current_col - 1))
+        if current_row == 6:
+            moves.append((current_row + 2, current_col))
+        if self.board[current_row + 1][current_col] != 0:
+            moves.remove((current_row + 1, current_col))
+        if self.board[current_row + 1][current_col] != 0 and current_row == 6:
+            moves.remove((current_row + 1, current_col))
+            moves.remove((current_row + 2, current_col))
+        if self.board[current_row + 2][current_col] != 0 and current_row == 6:
+            moves.remove((current_row + 2, current_col))
+        return moves
+
+
+#TODO Implement Check
+    def _king_white_moves(self, current_row, current_col):
+        moves = [(current_row-1, current_col+1),(current_row, current_col+1),(current_row+1, current_col+1),
+                 (current_row+1, current_col),(current_row+1, current_col-1),(current_row, current_col-1),
+                 (current_row-1, current_col-1),(current_row-1, current_col)]
+        rem_moves = []
+        for pos in moves:
+            if pos[0] in range(ROWS) and pos[1] in range(COLS):
+                if self.board[pos[0]][pos[1]] != 0:
+                    if self.board[pos[0]][pos[1]].player == W:
+                        rem_moves.append(pos)
+                else:
+                    pass
+            else:
+                rem_moves.append(pos)
+        moves = list(set(moves) - set(rem_moves))
+        return moves
+
+    def _king_black_moves(self, current_row, current_col):
+        moves = [(current_row - 1, current_col + 1), (current_row, current_col + 1), (current_row + 1, current_col + 1),
+                 (current_row + 1, current_col), (current_row + 1, current_col - 1), (current_row, current_col - 1),
+                 (current_row - 1, current_col - 1), (current_row - 1, current_col)]
+        rem_moves = []
+        for pos in moves:
+            if pos[0] in range(ROWS) and pos[1] in range(COLS):
+                if self.board[pos[0]][pos[1]] != 0:
+                    if self.board[pos[0]][pos[1]].player == W:
+                        rem_moves.append(pos)
+                else:
+                    pass
+            else:
+                rem_moves.append(pos)
+        moves = list(set(moves) - set(rem_moves))
+        return moves
+
+
+#TODO Figure out queen movement
     # def _queen_white_moves(self, current_row, current_col):
     #
     # def _queen_black_moves(self, current_row, current_col):
@@ -164,10 +215,47 @@ class Board:
     #
     # def _bishop_black_moves(self, current_row, current_col):
     #
-    # def _knight_white_moves(self, current_row, current_col):
-    #
-    # def _knight_black_moves(self, current_row, current_col):
-    #
+    def _knight_white_moves(self, current_row, current_col):
+        moves = [(current_row+2, current_col-1), (current_row+2, current_col+1),(current_row-2, current_col-1),
+                 (current_row-2, current_col+1),(current_row-1, current_col-2),(current_row-1, current_col+2),
+                 (current_row+1, current_col-2),(current_row+1, current_col+2)]
+
+        # This code block is able to check to see whether a given move is allowed regarding off-board and friendly fire
+        rem_moves = []
+        for pos in moves:
+            if pos[0] in range(ROWS) and pos[1] in range(COLS):
+                if self.board[pos[0]][pos[1]] != 0:
+                    if self.board[pos[0]][pos[1]].player == W:
+                        rem_moves.append(pos)
+                else:
+                    pass
+            else:
+                rem_moves.append(pos)
+        moves = list(set(moves) - set(rem_moves))
+        return moves
+#######################################################################################################################
+
+
+    def _knight_black_moves(self, current_row, current_col):
+        moves = [(current_row + 2, current_col - 1), (current_row + 2, current_col + 1), (current_row - 2, current_col - 1),
+                 (current_row - 2, current_col + 1), (current_row - 1, current_col - 2), (current_row - 1, current_col + 2),
+                 (current_row + 1, current_col - 2), (current_row + 1, current_col + 2)]
+
+        # This code block is able to check to see whether a given move is allowed regarding off-board and friendly fire
+        rem_moves = []
+        for pos in moves:
+            if pos[0] in range(ROWS) and pos[1] in range(COLS):
+                if self.board[pos[0]][pos[1]] != 0:
+                    if self.board[pos[0]][pos[1]].player == W:
+                        rem_moves.append(pos)
+                else:
+                    pass
+            else:
+                rem_moves.append(pos)
+        moves = list(set(moves) - set(rem_moves))
+        return moves
+
+
     # def _rook_white_moves(self, current_row, current_col):
     #
     # def _rook_black_moves(self, current_row, current_col):

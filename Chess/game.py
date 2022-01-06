@@ -20,7 +20,7 @@ class Game:
 
     def reset(self):
         self._init()
-
+#TODO Fix bug that causes clicking piece and empty space to kick back attribute error
     def select(self, row, col):
         if self.selected:
             result = self._move(row, col)
