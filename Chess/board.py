@@ -231,61 +231,6 @@ class Board:
                         break
                 i += 1
 
-        if current_row < 7:
-            i = 1
-            B_count = True
-            while B_count == True:
-                if current_row + i > 7:
-                    break
-                if self.board[current_row+i][current_col] != 0:
-                    if self.board[current_row+i][current_col].player == W:
-                        break
-                moves.append((current_row+i, current_col))
-                if current_row + i > 7:
-                    break
-                if self.board[current_row+i][current_col] != 0:
-                    if self.board[current_row+i][current_col].player == B:
-                        moves.append((current_row+i, current_col))
-                        break
-                i += 1
-
-        if current_col > 0:
-            i = 1
-            B_count = True
-            while B_count == True:
-                if current_col - i < 0:
-                    break
-                if self.board[current_row][current_col-i] != 0:
-                    if self.board[current_row][current_col-i].player == W:
-                        break
-                moves.append((current_row, current_col-i))
-                if current_col - i < 0:
-                    break
-                if self.board[current_row][current_col-i] != 0:
-                    if self.board[current_row][current_col-i].player == B:
-                        moves.append((current_row, current_col-i))
-                        break
-                i += 1
-
-        if current_col < 7:
-            i = 1
-            B_count = True
-            while B_count == True:
-                if current_col + i > 7:
-                    break
-                if self.board[current_row][current_col+i] != 0:
-                    if self.board[current_row][current_col+i].player == W:
-                        break
-                moves.append((current_row, current_col+i))
-
-                if current_col + i > 7:
-                    break
-                if self.board[current_row][current_col+i] != 0:
-                    if self.board[current_row][current_col+i].player == B:
-                        moves.append((current_row, current_col+i))
-                        break
-                i += 1
-
         return moves
 
 
