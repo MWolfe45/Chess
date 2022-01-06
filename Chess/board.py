@@ -145,7 +145,6 @@ class Board:
             moves.remove((current_row-2, current_col))
         return moves
 
-
     def _pawn_black_moves(self, current_row, current_col):
         moves = [(current_row + 1, current_col)]
         if (current_col + 1) in range(COLS):
@@ -169,8 +168,6 @@ class Board:
             moves.remove((current_row + 2, current_col))
         return moves
 
-
-#TODO Implement Check
     def _king_white_moves(self, current_row, current_col):
         moves = [(current_row-1, current_col+1),(current_row, current_col+1),(current_row+1, current_col+1),
                  (current_row+1, current_col),(current_row+1, current_col-1),(current_row, current_col-1),
@@ -205,14 +202,84 @@ class Board:
         moves = list(set(moves) - set(rem_moves))
         return moves
 
-
-#TODO Figure out queen movement
-    # def _queen_white_moves(self, current_row, current_col):
-    #
-    # def _queen_black_moves(self, current_row, current_col):
-    #
-    def _bishop_white_moves(self, current_row, current_col):
+    def _queen_white_moves(self, current_row, current_col):
         moves = []
+        # Diag up right
+        if (current_row > 0) and (current_col < 7):
+            i = 1
+            B_count = True
+            while B_count == True:
+                if ((current_row - i) < 0) or ((current_col + i) > 7):
+                    break
+                if self.board[current_row - i][current_col + i] != 0:
+                    if self.board[current_row - i][current_col + i].player == W:
+                        break
+                moves.append((current_row - i, current_col + i))
+                if ((current_row - i) < 0) or ((current_col + i) > 7):
+                    break
+                if self.board[current_row - i][current_col + i] != 0:
+                    if self.board[current_row - i][current_col + i].player == B:
+                        moves.append((current_row - i, current_col + i))
+                        break
+                i += 1
+
+        # Diag down left
+        if (current_row < 7) and (current_col > 0):
+            i = 1
+            B_count = True
+            while B_count == True:
+                if ((current_row + i) > 7) or ((current_col - i) < 0):
+                    break
+                if self.board[current_row + i][current_col - i] != 0:
+                    if self.board[current_row + i][current_col - i].player == W:
+                        break
+                moves.append((current_row + i, current_col - i))
+                if ((current_row + i) > 7) or ((current_col + i) < 0):
+                    break
+                if self.board[current_row + i][current_col - i] != 0:
+                    if self.board[current_row + i][current_col - i].player == B:
+                        moves.append((current_row + i, current_col - i))
+                        break
+                i += 1
+
+        # Diag up left
+        if (current_row > 0) and (current_col > 0):
+            i = 1
+            B_count = True
+            while B_count == True:
+                if ((current_row - i) < 0) or ((current_col - i) < 0):
+                    break
+                if self.board[current_row - i][current_col - i] != 0:
+                    if self.board[current_row - i][current_col - i].player == W:
+                        break
+                moves.append((current_row - i, current_col - i))
+                if ((current_row - i) < 0) or ((current_col - i) > 7):
+                    break
+                if self.board[current_row - i][current_col - i] != 0:
+                    if self.board[current_row - i][current_col - i].player == B:
+                        moves.append((current_row - i, current_col - i))
+                        break
+                i += 1
+
+        # Diag down right
+        if (current_row < 7) and (current_col < 7):
+            i = 1
+            B_count = True
+            while B_count == True:
+                if ((current_row + i) > 7) or ((current_col + i) > 7):
+                    break
+                if self.board[current_row + i][current_col + i] != 0:
+                    if self.board[current_row + i][current_col + i].player == W:
+                        break
+                moves.append((current_row + i, current_col + i))
+                if ((current_row + i) > 7) or ((current_col + i) > 7):
+                    break
+                if self.board[current_row + i][current_col + i] != 0:
+                    if self.board[current_row + i][current_col + i].player == B:
+                        moves.append((current_row + i, current_col + i))
+                        break
+                i += 1
+
         if current_row > 0:
             i = 1
             B_count = True
@@ -231,11 +298,375 @@ class Board:
                         break
                 i += 1
 
+        if current_row < 7:
+            i = 1
+            B_count = True
+            while B_count == True:
+                if current_row + i > 7:
+                    break
+                if self.board[current_row+i][current_col] != 0:
+                    if self.board[current_row+i][current_col].player == W:
+                        break
+                moves.append((current_row+i, current_col))
+                if current_row + i > 7:
+                    break
+                if self.board[current_row+i][current_col] != 0:
+                    if self.board[current_row+i][current_col].player == B:
+                        moves.append((current_row+i, current_col))
+                        break
+                i += 1
+
+        if current_col > 0:
+            i = 1
+            B_count = True
+            while B_count == True:
+                if current_col - i < 0:
+                    break
+                if self.board[current_row][current_col-i] != 0:
+                    if self.board[current_row][current_col-i].player == W:
+                        break
+                moves.append((current_row, current_col-i))
+                if current_col - i < 0:
+                    break
+                if self.board[current_row][current_col-i] != 0:
+                    if self.board[current_row][current_col-i].player == B:
+                        moves.append((current_row, current_col-i))
+                        break
+                i += 1
+
+        if current_col < 7:
+            i = 1
+            B_count = True
+            while B_count == True:
+                if current_col + i > 7:
+                    break
+                if self.board[current_row][current_col+i] != 0:
+                    if self.board[current_row][current_col+i].player == W:
+                        break
+                moves.append((current_row, current_col+i))
+
+                if current_col + i > 7:
+                    break
+                if self.board[current_row][current_col+i] != 0:
+                    if self.board[current_row][current_col+i].player == B:
+                        moves.append((current_row, current_col+i))
+                        break
+                i += 1
         return moves
 
+    def _queen_black_moves(self, current_row, current_col):
+        moves = []
+        # Diag up right
+        if (current_row > 0) and (current_col < 7):
+            i = 1
+            W_count = True
+            while W_count == True:
+                if ((current_row - i) < 0) or ((current_col + i) > 7):
+                    break
+                if self.board[current_row - i][current_col + i] != 0:
+                    if self.board[current_row - i][current_col + i].player == B:
+                        break
+                moves.append((current_row - i, current_col + i))
+                if ((current_row - i) < 0) or ((current_col + i) > 7):
+                    break
+                if self.board[current_row - i][current_col + i] != 0:
+                    if self.board[current_row - i][current_col + i].player == W:
+                        moves.append((current_row - i, current_col + i))
+                        break
+                i += 1
 
-    # def _bishop_black_moves(self, current_row, current_col):
-    #
+        # Diag down left
+        if (current_row < 7) and (current_col > 0):
+            i = 1
+            W_count = True
+            while W_count == True:
+                if ((current_row + i) > 7) or ((current_col - i) < 0):
+                    break
+                if self.board[current_row + i][current_col - i] != 0:
+                    if self.board[current_row + i][current_col - i].player == B:
+                        break
+                moves.append((current_row + i, current_col - i))
+                if ((current_row + i) > 7) or ((current_col + i) < 0):
+                    break
+                if self.board[current_row + i][current_col - i] != 0:
+                    if self.board[current_row + i][current_col - i].player == W:
+                        moves.append((current_row + i, current_col - i))
+                        break
+                i += 1
+
+        # Diag up left
+        if (current_row > 0) and (current_col > 0):
+            i = 1
+            W_count = True
+            while W_count == True:
+                if ((current_row - i) < 0) or ((current_col - i) < 0):
+                    break
+                if self.board[current_row - i][current_col - i] != 0:
+                    if self.board[current_row - i][current_col - i].player == B:
+                        break
+                moves.append((current_row - i, current_col - i))
+                if ((current_row - i) < 0) or ((current_col - i) > 7):
+                    break
+                if self.board[current_row - i][current_col - i] != 0:
+                    if self.board[current_row - i][current_col - i].player == W:
+                        moves.append((current_row - i, current_col - i))
+                        break
+                i += 1
+
+        # Diag down right
+        if (current_row < 7) and (current_col < 7):
+            i = 1
+            W_count = True
+            while W_count == True:
+                if ((current_row + i) > 7) or ((current_col + i) > 7):
+                    break
+                if self.board[current_row + i][current_col + i] != 0:
+                    if self.board[current_row + i][current_col + i].player == B:
+                        break
+                moves.append((current_row + i, current_col + i))
+                if ((current_row + i) > 7) or ((current_col + i) > 7):
+                    break
+                if self.board[current_row + i][current_col + i] != 0:
+                    if self.board[current_row + i][current_col + i].player == W:
+                        moves.append((current_row + i, current_col + i))
+                        break
+                i += 1
+
+            if current_row > 0:
+                i = 1
+                W_count = True
+                while W_count == True:
+                    if current_row - i < 0:
+                        break
+                    if self.board[current_row-i][current_col] != 0:
+                        if self.board[current_row-i][current_col].player == B:
+                            break
+                    moves.append((current_row-i, current_col))
+                    if current_row - i < 0:
+                        break
+                    if self.board[current_row-i][current_col] != 0:
+                        if self.board[current_row-i][current_col].player == W:
+                            moves.append((current_row-i, current_col))
+                            break
+                    i += 1
+
+            if current_row < 7:
+                i = 1
+                W_count = True
+                while W_count == True:
+                    if current_row + i > 7:
+                        break
+                    if self.board[current_row+i][current_col] != 0:
+                        if self.board[current_row+i][current_col].player == B:
+                            break
+                    moves.append((current_row+i, current_col))
+                    if current_row + i > 7:
+                        break
+                    if self.board[current_row+i][current_col] != 0:
+                        if self.board[current_row+i][current_col].player == W:
+                            moves.append((current_row+i, current_col))
+                            break
+                    i += 1
+
+            if current_col > 0:
+                i = 1
+                W_count = True
+                while W_count == True:
+                    if current_col - i < 0:
+                        break
+                    if self.board[current_row][current_col-i] != 0:
+                        if self.board[current_row][current_col-i].player == B:
+                            break
+                    moves.append((current_row, current_col-i))
+                    if current_col - i < 0:
+                        break
+                    if self.board[current_row][current_col-i] != 0:
+                        if self.board[current_row][current_col-i].player == W:
+                            moves.append((current_row, current_col-i))
+                            break
+                    i += 1
+
+            if current_col < 7:
+                i = 1
+                W_count = True
+                while W_count == True:
+                    if current_col + i > 7:
+                        break
+                    if self.board[current_row][current_col+i] != 0:
+                        if self.board[current_row][current_col+i].player == B:
+                            break
+                    moves.append((current_row, current_col+i))
+
+                    if current_col + i > 7:
+                        break
+                    if self.board[current_row][current_col+i] != 0:
+                        if self.board[current_row][current_col+i].player == W:
+                            moves.append((current_row, current_col+i))
+                            break
+                    i += 1
+
+            return moves
+
+    def _bishop_white_moves(self, current_row, current_col):
+        moves = []
+        #Diag up right
+        if (current_row > 0) and (current_col < 7):
+            i = 1
+            B_count = True
+            while B_count == True:
+                if ((current_row - i) < 0) or ((current_col + i) > 7):
+                    break
+                if self.board[current_row-i][current_col+i] != 0:
+                    if self.board[current_row-i][current_col+i].player == W:
+                        break
+                moves.append((current_row-i, current_col+i))
+                if ((current_row - i) < 0) or ((current_col + i) > 7):
+                    break
+                if self.board[current_row-i][current_col+i] != 0:
+                    if self.board[current_row-i][current_col+i].player == B:
+                        moves.append((current_row-i, current_col+i))
+                        break
+                i += 1
+
+        #Diag down left
+        if (current_row < 7) and (current_col > 0):
+            i = 1
+            B_count = True
+            while B_count == True:
+                if ((current_row + i) > 7) or ((current_col - i) < 0):
+                    break
+                if self.board[current_row+i][current_col-i] != 0:
+                    if self.board[current_row+i][current_col-i].player == W:
+                        break
+                moves.append((current_row+i, current_col-i))
+                if ((current_row + i) > 7) or ((current_col + i) < 0):
+                    break
+                if self.board[current_row+i][current_col-i] != 0:
+                    if self.board[current_row+i][current_col-i].player == B:
+                        moves.append((current_row+i, current_col-i))
+                        break
+                i += 1
+
+        #Diag up left
+        if (current_row > 0) and (current_col > 0):
+            i = 1
+            B_count = True
+            while B_count == True:
+                if ((current_row - i) < 0) or ((current_col - i) < 0):
+                    break
+                if self.board[current_row-i][current_col-i] != 0:
+                    if self.board[current_row-i][current_col-i].player == W:
+                        break
+                moves.append((current_row-i, current_col-i))
+                if ((current_row - i) < 0) or ((current_col-i) > 7):
+                    break
+                if self.board[current_row-i][current_col-i] != 0:
+                    if self.board[current_row-i][current_col-i].player == B:
+                        moves.append((current_row-i, current_col-i))
+                        break
+                i += 1
+
+        #Diag down right
+        if (current_row < 7) and (current_col < 7):
+            i = 1
+            B_count = True
+            while B_count == True:
+                if ((current_row + i) > 7) or ((current_col + i) > 7):
+                    break
+                if self.board[current_row+i][current_col+i] != 0:
+                    if self.board[current_row+i][current_col+i].player == W:
+                        break
+                moves.append((current_row+i, current_col+i))
+                if ((current_row + i) > 7) or ((current_col + i) > 7):
+                    break
+                if self.board[current_row+i][current_col+i] != 0:
+                    if self.board[current_row+i][current_col+i].player == B:
+                        moves.append((current_row+i, current_col+i))
+                        break
+                i += 1
+
+        return moves
+
+    def _bishop_black_moves(self, current_row, current_col):
+        moves = []
+        #Diag up right
+        if (current_row > 0) and (current_col < 7):
+            i = 1
+            W_count = True
+            while W_count == True:
+                if ((current_row - i) < 0) or ((current_col + i) > 7):
+                    break
+                if self.board[current_row-i][current_col+i] != 0:
+                    if self.board[current_row-i][current_col+i].player == B:
+                        break
+                moves.append((current_row-i, current_col+i))
+                if ((current_row - i) < 0) or ((current_col + i) > 7):
+                    break
+                if self.board[current_row-i][current_col+i] != 0:
+                    if self.board[current_row-i][current_col+i].player == W:
+                        moves.append((current_row-i, current_col+i))
+                        break
+                i += 1
+
+        #Diag down left
+        if (current_row < 7) and (current_col > 0):
+            i = 1
+            W_count = True
+            while W_count == True:
+                if ((current_row + i) > 7) or ((current_col - i) < 0):
+                    break
+                if self.board[current_row+i][current_col-i] != 0:
+                    if self.board[current_row+i][current_col-i].player == B:
+                        break
+                moves.append((current_row+i, current_col-i))
+                if ((current_row + i) > 7) or ((current_col + i) < 0):
+                    break
+                if self.board[current_row+i][current_col-i] != 0:
+                    if self.board[current_row+i][current_col-i].player == W:
+                        moves.append((current_row+i, current_col-i))
+                        break
+                i += 1
+
+        #Diag up left
+        if (current_row > 0) and (current_col > 0):
+            i = 1
+            W_count = True
+            while W_count == True:
+                if ((current_row - i) < 0) or ((current_col - i) < 0):
+                    break
+                if self.board[current_row-i][current_col-i] != 0:
+                    if self.board[current_row-i][current_col-i].player == B:
+                        break
+                moves.append((current_row-i, current_col-i))
+                if ((current_row - i) < 0) or ((current_col-i) > 7):
+                    break
+                if self.board[current_row-i][current_col-i] != 0:
+                    if self.board[current_row-i][current_col-i].player == W:
+                        moves.append((current_row-i, current_col-i))
+                        break
+                i += 1
+
+        #Diag down right
+        if (current_row < 7) and (current_col < 7):
+            i = 1
+            W_count = True
+            while W_count == True:
+                if ((current_row + i) > 7) or ((current_col + i) > 7):
+                    break
+                if self.board[current_row+i][current_col+i] != 0:
+                    if self.board[current_row+i][current_col+i].player == B:
+                        break
+                moves.append((current_row+i, current_col+i))
+                if ((current_row + i) > 7) or ((current_col + i) > 7):
+                    break
+                if self.board[current_row+i][current_col+i] != 0:
+                    if self.board[current_row+i][current_col+i].player == W:
+                        moves.append((current_row+i, current_col+i))
+                        break
+                i += 1
+
+        return moves
+
     def _knight_white_moves(self, current_row, current_col):
         moves = [(current_row+2, current_col-1), (current_row+2, current_col+1),(current_row-2, current_col-1),
                  (current_row-2, current_col+1),(current_row-1, current_col-2),(current_row-1, current_col+2),
@@ -255,7 +686,6 @@ class Board:
         moves = list(set(moves) - set(rem_moves))
         return moves
 
-
     def _knight_black_moves(self, current_row, current_col):
         moves = [(current_row + 2, current_col - 1), (current_row + 2, current_col + 1), (current_row - 2, current_col - 1),
                  (current_row - 2, current_col + 1), (current_row - 1, current_col - 2), (current_row - 1, current_col + 2),
@@ -274,7 +704,6 @@ class Board:
                 rem_moves.append(pos)
         moves = list(set(moves) - set(rem_moves))
         return moves
-
 
     def _rook_white_moves(self, current_row, current_col):
         moves = []
@@ -352,7 +781,6 @@ class Board:
                 i += 1
 
         return moves
-
 
     def _rook_black_moves(self, current_row, current_col):
         moves = []
