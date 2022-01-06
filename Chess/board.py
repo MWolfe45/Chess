@@ -9,7 +9,7 @@ starting_dict = {'1,1':Rook(0,0,B), '1,2':Knight(0,1,B), '1,3':Bishop(0,2,B), '1
                 '4,1':0, '4,2':0, '4,3':0, '4,4':0, '4,5':0, '4,6':0, '4,7':0, '4,8':0,
                 '5,1':0, '5,2':0, '5,3':0, '5,4':0, '5,5':0, '5,6':0, '5,7':0, '5,8':0,
                 '6,1':0, '6,2':0, '6,3':0, '6,4':0, '6,5':0, '6,6':0, '6,7':0, '6,8':0,
-                '7,1':0, '7,2':Pawn(6,1,W), '7,3':Pawn(6,2,W), '7,4':Pawn(6,3,W), '7,5':Pawn(6,4,W), '7,6':Pawn(6,5,W), '7,7':Pawn(6,6,W), '7,8':Pawn(6,7,W),
+                '7,1':Pawn(6,0,W), '7,2':Pawn(6,1,W), '7,3':Pawn(6,2,W), '7,4':Pawn(6,3,W), '7,5':Pawn(6,4,W), '7,6':Pawn(6,5,W), '7,7':Pawn(6,6,W), '7,8':Pawn(6,7,W),
                 '8,1':Rook(7,0,W), '8,2':Knight(7,1,W), '8,3':Bishop(7,2,W), '8,4':Queen(7,3,W), '8,5':King(7,4,W), '8,6':Bishop(7,5,W), '8,7':Knight(7,6,W), '8,8':Rook(7,7,W)}
 
 
@@ -157,7 +157,7 @@ class Board:
             if isinstance(left_attack, Piece):
                 if left_attack.player == W:
                     moves.append((current_row + 1, current_col - 1))
-        if current_row == 6:
+        if current_row == 1:
             moves.append((current_row + 2, current_col))
         if self.board[current_row + 1][current_col] != 0:
             moves.remove((current_row + 1, current_col))
@@ -696,7 +696,7 @@ class Board:
         for pos in moves:
             if pos[0] in range(ROWS) and pos[1] in range(COLS):
                 if self.board[pos[0]][pos[1]] != 0:
-                    if self.board[pos[0]][pos[1]].player == W:
+                    if self.board[pos[0]][pos[1]].player == B:
                         rem_moves.append(pos)
                 else:
                     pass

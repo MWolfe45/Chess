@@ -65,6 +65,7 @@ class Bishop(Piece):
 class Rook(Piece):
     def __init__(self, row, col, player):
         Piece.__init__(self, row, col, player)
+        self.has_moved = False
 
     def draw_piece(self, win):
         if self.player == B:
@@ -89,6 +90,7 @@ class Queen(Piece):
 class King(Piece):
     def __init__(self, row, col, player):
         Piece.__init__(self, row, col, player)
+        self.has_moved = False
 
     def draw_piece(self, win):
         if self.player == B:
