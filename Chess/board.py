@@ -4,12 +4,12 @@ from .pieces import *
 import inspect
 
 starting_dict = {'1,1':Rook(0,0,B), '1,2':Knight(0,1,B), '1,3':Bishop(0,2,B), '1,4':Queen(0,3,B), '1,5':King(0,4,B), '1,6':Bishop(0,5,B), '1,7':Knight(0,6,B), '1,8':Rook(0,7,B),
-                '2,1':Pawn(1,0,B), '2,2':Pawn(1,1,B), '2,3':Pawn(1,2,B), '2,4':Pawn(1,3,B), '2,5':Pawn(1,4,B), '2,6':Pawn(1,5,B), '2,7':Pawn(1,6,B), '2,8':Pawn(1,7,B),
+                '2,1':Pawn(1,0,B), '2,2':Pawn(1,1,B), '2,3':Pawn(1,2,B), '2,4':Pawn(1,3,B), '2,5':Queen(1,4,B), '2,6':Pawn(1,5,B), '2,7':Pawn(1,6,B), '2,8':Pawn(1,7,B),
                 '3,1':0, '3,2':0, '3,3':0, '3,4':0, '3,5':0, '3,6':0, '3,7':0, '3,8':0,
                 '4,1':0, '4,2':0, '4,3':0, '4,4':0, '4,5':0, '4,6':0, '4,7':0, '4,8':0,
                 '5,1':0, '5,2':0, '5,3':0, '5,4':0, '5,5':0, '5,6':0, '5,7':0, '5,8':0,
                 '6,1':0, '6,2':0, '6,3':0, '6,4':0, '6,5':0, '6,6':0, '6,7':0, '6,8':0,
-                '7,1':Pawn(6,0,W), '7,2':Pawn(6,1,W), '7,3':Pawn(6,2,W), '7,4':Pawn(6,3,W), '7,5':Pawn(6,4,W), '7,6':Pawn(6,5,W), '7,7':Pawn(6,6,W), '7,8':Pawn(6,7,W),
+                '7,1':Pawn(6,0,W), '7,2':Pawn(6,1,W), '7,3':Pawn(6,2,W), '7,4':Pawn(6,3,W), '7,5':Knight(6,4,W), '7,6':Pawn(6,5,W), '7,7':Pawn(6,6,W), '7,8':Pawn(6,7,W),
                 '8,1':Rook(7,0,W), '8,2':Knight(7,1,W), '8,3':Bishop(7,2,W), '8,4':Queen(7,3,W), '8,5':King(7,4,W), '8,6':Bishop(7,5,W), '8,7':Knight(7,6,W), '8,8':Rook(7,7,W)}
 
 
@@ -44,7 +44,6 @@ class Board:
         piece.move(row, col)
         # INCLUDE ABILITY TO CHANGE PAWN STATUS TO QUEEN/ROOK/KNIGHT/BISHOP
 
-
     def get_piece(self, row, col):
         return self.board[row][col]
 
@@ -58,6 +57,14 @@ class Board:
                     self.board[row].append(0)
                 else:
                     self.board[row].append(piece)
+        for row in range(ROWS):
+            self.board_state.append([])
+            for col in range (COLS):
+                piece = starting_dict[str(row+1)+','+str(col+1)]
+                if piece == 0:
+                    self.board_state[row].append(0)
+                else:
+                    self.board_state[row].append(piece)
 
 
     def draw(self, win):
@@ -86,7 +93,7 @@ class Board:
                 moveset = self._pawn_white_moves(row, col)
             elif piece.player ==B:
                 moveset = self._pawn_black_moves(row, col)
-#TODO rewrite the class methods to match the piece in the isinstance argument
+
         elif isinstance(piece, King):
             if piece.player == W:
                 moveset = self._king_white_moves(row, col)
@@ -121,7 +128,9 @@ class Board:
 
         return moveset
 
+#####################################################################
 #TODO Add en passant and promotion to pawns
+#TODO Pawn bug where moving a knight in front of white pawn causes crash related to moves.remove
     def _pawn_white_moves(self, current_row, current_col):
         moves = [(current_row-1, current_col)]
         if (current_col + 1) in range(COLS):
@@ -449,7 +458,7 @@ class Board:
                             moves.append((current_row-i, current_col))
                             break
                     i += 1
-
+#TODO Checck these if statements, some of the conditions might be redundant
             if current_row < 7:
                 i = 1
                 W_count = True
@@ -858,8 +867,4 @@ class Board:
                 i += 1
 
         return moves
-
-#TODO Define the movesets for each of the different pieces here
-
-
-    # def _check(self)
+#####################################################################

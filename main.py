@@ -21,7 +21,7 @@ def main():
     run = True
     clock = pygame.time.Clock()
     game = Game(WIN)
-#TODO Add option to do hotseat and board flipping
+
     while run:
         clock.tick(FPS)
         # if game.turn == B:

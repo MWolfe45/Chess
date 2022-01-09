@@ -2,9 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f710b0b5-6de6-4c11-8061-a42d50bd610a" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/minimax/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minimax/algorithm.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Chess/board.py" beforeDir="false" afterPath="$PROJECT_DIR$/Chess/board.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Chess/game.py" beforeDir="false" afterPath="$PROJECT_DIR$/Chess/game.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -186,24 +189,74 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Chess/board.py</url>
-          <line>770</line>
-          <option name="timeStamp" value="30" />
+          <url>file://$PROJECT_DIR$/Chess/game.py</url>
+          <line>48</line>
+          <option name="timeStamp" value="62" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Chess/game.py</url>
+          <line>50</line>
+          <option name="timeStamp" value="84" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Chess/game.py</url>
+          <line>51</line>
+          <option name="timeStamp" value="85" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Chess/game.py</url>
+          <line>52</line>
+          <option name="timeStamp" value="86" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Chess/board.py</url>
-          <line>772</line>
-          <option name="timeStamp" value="31" />
+          <line>319</line>
+          <option name="timeStamp" value="87" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Chess/board.py</url>
-          <line>779</line>
-          <option name="timeStamp" value="32" />
+          <line>324</line>
+          <option name="timeStamp" value="88" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Chess/board.py</url>
-          <line>773</line>
-          <option name="timeStamp" value="33" />
+          <line>477</line>
+          <option name="timeStamp" value="89" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Chess/game.py</url>
+          <line>122</line>
+          <option name="timeStamp" value="90" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Chess/game.py</url>
+          <line>124</line>
+          <option name="timeStamp" value="91" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Chess/game.py</url>
+          <line>126</line>
+          <option name="timeStamp" value="92" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Chess/game.py</url>
+          <line>128</line>
+          <option name="timeStamp" value="93" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Chess/game.py</url>
+          <line>117</line>
+          <option name="timeStamp" value="94" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Chess/game.py</url>
+          <line>116</line>
+          <option name="timeStamp" value="95" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Chess/game.py</url>
+          <line>120</line>
+          <option name="timeStamp" value="96" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
