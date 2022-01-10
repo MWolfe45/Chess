@@ -7,6 +7,8 @@ class Game:
     def __init__(self,win):
         self._init()
         self.win = win
+        self.turn_no = 0
+        self.move_record = {}
 
     def update(self):
         self.board.draw(self.win)
@@ -16,12 +18,12 @@ class Game:
     def _init(self):
         self.selected = None
         self.board = Board()
-        self.board_state = self.board.board_state
         self.turn = W
         self.valid_moves = {}
 
     def reset(self):
         self._init()
+
 
     def select(self, row, col):
         if self.selected:
@@ -46,16 +48,30 @@ class Game:
         piece = self.board.get_piece(row, col)
         a, b = self.selected.row, self.selected.col
         if self.selected and piece == 0 and (row, col) in self.valid_moves:
-            self.board.move(self.selected, row, col)
-            self.valid_moves = {}
+
             if self._check_self():
                 self.board.move(self.selected, a, b)
                 return False
             self._check_opponent()
+            self.move_record[self.turn_no] = (self.selected, row, col)
+            if isinstance(self.selected, King) or isinstance(self.selected, Rook):
+                self.selected.has_moved = True
+            if isinstance(self.selected, King) and (row,col) in [(7,2)] and self.selected.player == W and not self.check_square_attacked(7,3) and not self._check_self():
+                self.board.whitecastle(row, col)
+            if isinstance(self.selected, King) and (row,col) in [(7,6)] and self.selected.player == W and not self.check_square_attacked(7,5) and not self._check_self():
+                self.board.whitecastle(row, col)
+            if isinstance(self.selected, King) and (row, col) in [(0,2)] and self.selected.player == B and not self.check_square_attacked(0,3) and not self._check_self():
+                self.board.blackcastle(row, col)
+            if isinstance(self.selected, King) and (row, col) in [(0,6)] and self.selected.player == B and not self.check_square_attacked(0,5) and not self._check_self():
+                self.board.blackcastle(row, col)
+            self.board.move(self.selected, row, col)
+            self.valid_moves = {}
             if self.turn == W:
                 self.turn = B
+                self.turn_no += 1
             elif self.turn ==B:
                 self.turn = W
+                self.turn_no += 1
         if piece != 0:
             if self.selected and piece.player != self.selected.player and (row, col) in self.valid_moves:
                 self.board.remove(piece)
@@ -64,11 +80,16 @@ class Game:
                     self.board.move(self.selected, a, b)
                     return False
                 self._check_opponent()
+                self.move_record[self.turn_no] = (self.selected, row, col)
+                if isinstance(self.selected, King) or isinstance(self.selected, Rook):
+                    self.selected.has_moved = True
                 self.valid_moves = {}
                 if self.turn == W:
                     self.turn = B
+                    self.turn_no += 1
                 elif self.turn ==B:
                     self.turn = W
+                    self.turn_no += 1
         else:
             return False
         return True
@@ -122,3 +143,22 @@ class Game:
                         pass
                 else:
                     pass
+
+    def check_square_attacked(self, row, col):
+        moves = []
+        for row in self.board.board:
+            for square in row:
+                if square != 0:
+                    if square.player != self.turn:
+                        moves.append(self.board.get_valid_moves(square))
+                    else:
+                        pass
+                else:
+                    pass
+
+        for move in moves:
+            if (row, col) in move:
+                return True
+        else:
+            pass
+

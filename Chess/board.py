@@ -9,8 +9,8 @@ starting_dict = {'1,1':Rook(0,0,B), '1,2':Knight(0,1,B), '1,3':Bishop(0,2,B), '1
                 '4,1':0, '4,2':0, '4,3':0, '4,4':0, '4,5':0, '4,6':0, '4,7':0, '4,8':0,
                 '5,1':0, '5,2':0, '5,3':0, '5,4':0, '5,5':0, '5,6':0, '5,7':0, '5,8':0,
                 '6,1':0, '6,2':0, '6,3':0, '6,4':0, '6,5':0, '6,6':0, '6,7':0, '6,8':0,
-                '7,1':Pawn(6,0,W), '7,2':Pawn(6,1,W), '7,3':Pawn(6,2,W), '7,4':Pawn(6,3,W), '7,5':Knight(6,4,W), '7,6':Pawn(6,5,W), '7,7':Pawn(6,6,W), '7,8':Pawn(6,7,W),
-                '8,1':Rook(7,0,W), '8,2':Knight(7,1,W), '8,3':Bishop(7,2,W), '8,4':Queen(7,3,W), '8,5':King(7,4,W), '8,6':Bishop(7,5,W), '8,7':Knight(7,6,W), '8,8':Rook(7,7,W)}
+                '7,1':Pawn(6,0,W), '7,2':Pawn(6,1,W), '7,3':Pawn(6,2,W), '7,4':Pawn(6,3,W), '7,5':0, '7,6':Pawn(6,5,W), '7,7':Pawn(6,6,W), '7,8':Pawn(6,7,W),
+                '8,1':Rook(7,0,W), '8,2':Knight(7,1,W), '8,3':Bishop(7,2,W), '8,4':Queen(7,3,W), '8,5':King(7,4,W), '8,6':0, '8,7':0, '8,8':Rook(7,7,W)}
 
 
 
@@ -57,15 +57,6 @@ class Board:
                     self.board[row].append(0)
                 else:
                     self.board[row].append(piece)
-        for row in range(ROWS):
-            self.board_state.append([])
-            for col in range (COLS):
-                piece = starting_dict[str(row+1)+','+str(col+1)]
-                if piece == 0:
-                    self.board_state[row].append(0)
-                else:
-                    self.board_state[row].append(piece)
-
 
     def draw(self, win):
         self.draw_squares(win)
@@ -95,10 +86,14 @@ class Board:
                 moveset = self._pawn_black_moves(row, col)
 
         elif isinstance(piece, King):
-            if piece.player == W:
+            if piece.player == W and piece.has_moved == False:
                 moveset = self._king_white_moves(row, col)
-            elif piece.player == B:
+                moveset.append(self._whitecastle(row, col))
+            elif piece.player == W:
+                moveset = self._king_white_moves(row, col)
+            elif piece.player == B and piece.has_moved == False:
                 moveset = self._king_black_moves(row, col)
+                moveset.append(self._blackcastle(row,col))
 
         elif isinstance(piece, Queen):
             if piece.player==W:
@@ -191,8 +186,24 @@ class Board:
                     pass
             else:
                 rem_moves.append(pos)
+
         moves = list(set(moves) - set(rem_moves))
         return moves
+
+    def _whitecastle(self, current_row, current_col):
+        if self.board[7][7] != 0 and self.board[7][0] != 0:
+            if not self.board[current_row][current_col].has_moved and not self.board[7][0].has_moved and self.board[7][1] == 0 and self.board[7][2] == 0:
+                return (7,2)
+            elif not self.board[current_row][current_col].has_moved and not self.board[7][7].has_moved and self.board[7][6] == 0 and self.board[7][5] == 0:
+                return (7,6)
+
+    def whitecastle(self, row, col):
+        if (row, col) == (7,6):
+            self.move(self.board[7][7], 7, 5)
+        elif (row, col) == (7,2):
+            self.move(self.board[7][0], 7, 3)
+
+
 
     def _king_black_moves(self, current_row, current_col):
         moves = [(current_row - 1, current_col + 1), (current_row, current_col + 1), (current_row + 1, current_col + 1),
@@ -208,8 +219,27 @@ class Board:
                     pass
             else:
                 rem_moves.append(pos)
+        if self.board[0][0] != 0 and self.board[0][7] != 0:
+            if not self.board[current_row][current_col].has_moved and not self.board[0][0].has_moved and self.board[0][1] == 0 and self.board[0][2] == 0:
+                moves.append((0,0))
+            if not self.board[current_row][current_col].has_moved and not self.board[0][7].has_moved and self.board[0][6] == 0 and self.board[0][5] == 0:
+                moves.append((0,7))
         moves = list(set(moves) - set(rem_moves))
         return moves
+
+    def _blackcastle(self, current_row, current_col):
+        if self.board[0][0] != 0 and self.board[0][7] != 0:
+            if not self.board[current_row][current_col].has_moved and not self.board[7][0].has_moved and self.board[7][1] == 0 and self.board[7][2] == 0:
+                return (0, 2)
+            if not self.board[current_row][current_col].has_moved and not self.board[7][7].has_moved and self.board[7][6] == 0 and self.board[7][5] == 0:
+                return (0, 6)
+
+    def blackcastle(self, row, col):
+
+        if (row, col) == (0,2):
+            self.move(self.board[0][0], 0, 3)
+        if (row, col) == (0,6):
+            self.move(self.board[0][7], 0, 5)
 
     def _queen_white_moves(self, current_row, current_col):
         moves = []
