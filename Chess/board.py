@@ -86,7 +86,7 @@ class Board:
                 moveset = self._pawn_black_moves(row, col)
 
         elif isinstance(piece, King):
-            if piece.player == W and piece.has_moved == False:
+            if piece.player == W and piece.has_moved == False and piece.in_check == False:
                 moveset = self._king_white_moves(row, col)
                 moveset.append(self._whitecastle(row, col))
             elif piece.player == W:
@@ -189,6 +189,7 @@ class Board:
 
         moves = list(set(moves) - set(rem_moves))
         return moves
+
 
     def _whitecastle(self, current_row, current_col):
         if self.board[7][7] != 0 and self.board[7][0] != 0:

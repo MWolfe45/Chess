@@ -91,6 +91,7 @@ class King(Piece):
     def __init__(self, row, col, player):
         Piece.__init__(self, row, col, player)
         self.has_moved = False
+        self.in_check = False
 
     def draw_piece(self, win):
         if self.player == B:
