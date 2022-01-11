@@ -29,6 +29,7 @@ class Piece:
 class Pawn(Piece):
     def __init__(self, row, col, player):
         Piece.__init__(self, row, col, player)
+        self.ID = 'p'
 
     def draw_piece(self, win):
         if self.player == B:
@@ -41,6 +42,7 @@ class Pawn(Piece):
 class Knight(Piece):
     def __init__(self, row, col, player):
         Piece.__init__(self, row, col, player)
+        self.ID = 'n'
 
     def draw_piece(self, win):
         if self.player == B:
@@ -53,6 +55,7 @@ class Knight(Piece):
 class Bishop(Piece):
     def __init__(self, row, col, player):
         Piece.__init__(self, row, col, player)
+        self.ID = 'b'
 
     def draw_piece(self, win):
         if self.player == B:
@@ -66,6 +69,7 @@ class Rook(Piece):
     def __init__(self, row, col, player):
         Piece.__init__(self, row, col, player)
         self.has_moved = False
+        self.ID = 'r'
 
     def draw_piece(self, win):
         if self.player == B:
@@ -78,6 +82,7 @@ class Rook(Piece):
 class Queen(Piece):
     def __init__(self, row, col, player):
         Piece.__init__(self, row, col, player)
+        self.ID = 'q'
 
     def draw_piece(self, win):
         if self.player == B:
@@ -92,6 +97,7 @@ class King(Piece):
         Piece.__init__(self, row, col, player)
         self.has_moved = False
         self.in_check = False
+        self.ID = 'k'
 
     def draw_piece(self, win):
         if self.player == B:

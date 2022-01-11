@@ -45,115 +45,22 @@ class Game:
 
 
     def _move(self, row, col):
-        space = self.board.get_piece(row, col)
-        a, b = self.selected.row, self.selected.col
-        if self._check_self():
-            if isinstance(self.selected, King):
-                rem_moves = []
-                for move in self.valid_moves:
-                    if self.check_square_attacked(move[0], move[1]):
-                        rem_moves.append(move)
-                    self.valid_moves = list(set(move) - set(rem_moves))
-                if self.selected and space == 0 and (row, col) in self.valid_moves:
-                    self.board.move(self.selected, row, col)
-                    self.valid_moves = {}
-                    self.change_turn()
-                    return True
-                elif self.selected and space != 0 and (row, col) in self.valid_moves:
-                    self.board.remove(space)
-                    self.board.move(self.selected, row, col)
-                    self.valid_moves = {}
-                    self.change_turn()
-                    return True
-            else:
-                if self.selected and space == 0 and (row, col) in self.valid_moves:
-                    self.board.move(self.selected, row, col)
-                    if self._check_self():
-                        self.board.move(self.selected, a, b)
-                        return False
-                    else:
-                        self.valid_moves = {}
-                        self.change_turn()
-                        return True
-                elif self.selected and space != 0 and (row, col) in self.valid_moves:
-                    self.board.remove(space)
-                    self.board.move(self.selected, row, col)
-                    if self._check_self():
-                        self.board.move(self.selected, a, b)
-                        return False
-                    else:
-                        self.valid_moves = {}
-                        self.change_turn()
-                        return True
+        piece = self.board.get_piece(row, col)
+        if self.selected and piece == 0 and (row, col) in self.valid_moves:
+            self.board.move(self.selected, row, col)
+            self.valid_moves = {}
+            self.change_turn()
+            return True
+        elif self.selected and piece != 0 and (row, col) in self.valid_moves:
+            self.board.remove(piece)
+            self.board.move(self.selected, row, col)
+            self.valid_moves = {}
+            self.change_turn()
+            return True
+        else:
+            return False
 
-        elif not self._check_self():
-            if isinstance(self.selected, King):
-                self.castle(row, col)
-                if self.selected and space == 0 and (row, col) in self.valid_moves:
-                    self.board.move(self.selected, row, col)
-                    if self._check_self():
-                        self.board.move(self.selected, a, b)
-                        return False
-                    else:
-                        self.valid_moves = {}
-                        self.change_turn()
-                        return True
-                elif self.selected and space != 0 and (row, col) in self.valid_moves:
-                    self.board.remove(space)
-                    self.board.move(self.selected, row, col)
-                    if self._check_self():
-                        self.board.move(self.selected, a, b)
-                        return False
-                    else:
-                        self.valid_moves = {}
-                        self.change_turn()
-                        return True
-            else:
-                if self.selected and space == 0 and (row, col) in self.valid_moves:
-                    self.board.move(self.selected, row, col)
-                    self.valid_moves = {}
-                    self.change_turn()
-                    return True
-                if space != 0:
-                    if self.selected and space.player != self.selected.player and (row, col) in self.valid_moves:
-                        self.board.remove(space)
-                        self.board.move(self.selected, row, col)
-                        if self._check_self():
-                            self.board.move(self.selected, a, b)
-                            return False
 
-                        # self.move_record[self.turn_no] = (self.selected, row, col)
-
-                        self.valid_moves = {}
-                        self.change_turn()
-                else:
-                    return False
-                return True
-    
-    def _check_opponent(self):
-        moves = []
-        for row in self.board.board:
-            for square in row:
-                if square != 0:
-                    if square.player == self.turn:
-                        moves.append(self.board.get_valid_moves(square))
-                    else:
-                        pass
-                else:
-                    pass
-        for row in self.board.board:
-            for square in row:
-                if isinstance(square, King):
-                    if square.player != self.turn:
-                        for move in moves:
-                            if (square.row, square.col) in move:
-                                return True
-                            else:
-                                pass
-                    else:
-                        pass
-                else:
-                    pass
 
 
 # Looks to see whether the current player is in check
@@ -174,8 +81,10 @@ class Game:
                     if square.player == self.turn:
                         for move in moves:
                             if (square.row, square.col) in move:
+                                square.in_check = True
                                 return True
                             else:
+                                square.in_check = False
                                 pass
                     else:
                         pass

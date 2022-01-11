@@ -75,53 +75,283 @@ class Board:
     # def winner(self):
 #TODO Add win conditions
 
+    def _check_self(self, player):
+        moves = []
+        for row in self.board:
+            for square in row:
+                if square != 0:
+                    if square.player != player:
+                        if square.ID == 'p':
+                            if square.player == W:
+                                moves.append(self._pawn_white_moves(square.row, square.col))
+                            elif square.player == B:
+                                moves.append(self._pawn_black_moves(square.row, square.col))
+                        elif square.ID == 'n':
+                            if square.player == W:
+                                moves.append(self._knight_white_moves(square.row, square.col))
+                            elif square.player == B:
+                                moves.append(self._knight_black_moves(square.row, square.col))
+                        elif square.ID == 'b':
+                            if square.player == W:
+                                moves.append(self._bishop_white_moves(square.row, square.col))
+                            elif square.player == B:
+                                moves.append(self._bishop_black_moves(square.row, square.col))
+                        elif square.ID == 'r':
+                            if square.player == W:
+                                moves.append(self._rook_white_moves(square.row, square.col))
+                            elif square.player == B:
+                                moves.append(self._rook_black_moves(square.row, square.col))
+                        elif square.ID == 'q':
+                            if square.player == W:
+                                moves.append(self._queen_white_moves(square.row, square.col))
+                            elif square.player == B:
+                                moves.append(self._queen_black_moves(square.row, square.col))
+                    else:
+                        pass
+                else:
+                    pass
+        for row in self.board:
+            for square in row:
+                if isinstance(square, King):
+                    if square.player == player:
+                        for move in moves:
+                            if (square.row, square.col) in move:
+                                square.in_check = True
+                                return True
+                            else:
+                                square.in_check = False
+                                pass
+                    else:
+                        pass
+                else:
+                    pass
+
+
+    def check_square_attacked(self, row, col, player):
+        moves = []
+        for row in self.board:
+            for square in row:
+                if square != 0:
+                    if square.player != player:
+                        moves.append(self.get_valid_moves(square))
+                    else:
+                        pass
+                else:
+                    pass
+        for move in moves:
+            if (row, col) in move:
+                return True
+        else:
+            pass
+
+
+
+#TODO Moved valid move generator to board file, copied over check square attacked and self check too. trying to fold move logic only into this file
+
     def get_valid_moves(self, piece):
-        row = piece.row
-        col = piece.col
         # WILL NEED TO BE ON A PIECE BY PIECE BASIS
-        if isinstance(piece, Pawn):
-            if piece.player==W:
-                moveset = self._pawn_white_moves(row, col)
-            elif piece.player ==B:
-                moveset = self._pawn_black_moves(row, col)
-
-        elif isinstance(piece, King):
-            if piece.player == W and piece.has_moved == False and piece.in_check == False:
-                moveset = self._king_white_moves(row, col)
-                moveset.append(self._whitecastle(row, col))
-            elif piece.player == W:
-                moveset = self._king_white_moves(row, col)
-            elif piece.player == B and piece.has_moved == False:
-                moveset = self._king_black_moves(row, col)
-                moveset.append(self._blackcastle(row,col))
-
-        elif isinstance(piece, Queen):
-            if piece.player==W:
-                moveset = self._queen_white_moves(row, col)
-            elif piece.player ==B:
-                moveset = self._queen_black_moves(row, col)
-
-        elif isinstance(piece, Bishop):
-            if piece.player==W:
-                moveset = self._bishop_white_moves(row, col)
-            elif piece.player ==B:
-                moveset = self._bishop_black_moves(row, col)
-
-
-        elif isinstance(piece, Knight):
-            if piece.player==W:
-                moveset = self._knight_white_moves(row, col)
-            elif piece.player ==B:
-                moveset = self._knight_black_moves(row, col)
-
-
-        elif isinstance(piece, Rook):
-            if piece.player==W:
-                moveset = self._rook_white_moves(row, col)
-            elif piece.player ==B:
-                moveset = self._rook_black_moves(row, col)
-
+        row, col = piece.row, piece.col
+        if self._check_self(piece.player):
+            if isinstance(piece, Pawn):
+                if piece.player==W:
+                    moveset = self._pawn_white_moves(row, col)
+                elif piece.player ==B:
+                    moveset = self._pawn_black_moves(row, col)
+                rem_moves = []
+                for move in moveset:
+                    if self.board[move[0]][move[1]] == 0:
+                        self.move(piece, move[0], move[1])
+                        if self._check_self(piece.player):
+                            self.move(piece, row, col)
+                            rem_moves.append(move)
+                        elif not self._check_self(piece.player):
+                            pass
+                moveset = list(set(moveset) - set(rem_moves))
+            elif isinstance(piece, King):
+                if piece.player == W and piece.has_moved == True or piece.in_check == True:
+                    moveset = self._king_white_moves(row, col)
+                elif piece.player == B and piece.has_moved == True or piece.in_check == True:
+                    moveset = self._king_black_moves(row, col)
+                rem_moves = []
+                for move in moveset:
+                    if self.board[move[0]][move[1]] == 0:
+                        self.move(piece, move[0], move[1])
+                        if self._check_self(piece.player):
+                            self.move(piece, row, col)
+                            rem_moves.append(move)
+                        elif not self._check_self(piece.player):
+                            pass
+                moveset = list(set(moveset) - set(rem_moves))
+            elif isinstance(piece, Queen):
+                if piece.player==W:
+                    moveset = self._queen_white_moves(row, col)
+                elif piece.player ==B:
+                    moveset = self._queen_black_moves(row, col)
+                rem_moves = []
+                for move in moveset:
+                    if self.board[move[0]][move[1]] == 0:
+                        self.move(piece, move[0], move[1])
+                        if self._check_self(piece.player):
+                            self.move(piece, row, col)
+                            rem_moves.append(move)
+                        elif not self._check_self(piece.player):
+                            pass
+                moveset = list(set(moveset) - set(rem_moves))
+            elif isinstance(piece, Bishop):
+                if piece.player==W:
+                    moveset = self._bishop_white_moves(row, col)
+                elif piece.player ==B:
+                    moveset = self._bishop_black_moves(row, col)
+                rem_moves = []
+                for move in moveset:
+                    if self.board[move[0]][move[1]] == 0:
+                        self.move(piece, move[0], move[1])
+                        if self._check_self(piece.player):
+                            self.move(piece, row, col)
+                            rem_moves.append(move)
+                        elif not self._check_self(piece.player):
+                            pass
+                moveset = list(set(moveset) - set(rem_moves))
+            elif isinstance(piece, Knight):
+                if piece.player==W:
+                    moveset = self._knight_white_moves(row, col)
+                elif piece.player ==B:
+                    moveset = self._knight_black_moves(row, col)
+                rem_moves = []
+                for move in moveset:
+                    if self.board[move[0]][move[1]] == 0:
+                        self.move(piece, move[0], move[1])
+                        if self._check_self(piece.player):
+                            self.move(piece, row, col)
+                            rem_moves.append(move)
+                        elif not self._check_self(piece.player):
+                            pass
+                moveset = list(set(moveset) - set(rem_moves))
+            elif isinstance(piece, Rook):
+                if piece.player==W:
+                    moveset = self._rook_white_moves(row, col)
+                elif piece.player ==B:
+                    moveset = self._rook_black_moves(row, col)
+                rem_moves = []
+                for move in moveset:
+                    if self.board[move[0]][move[1]] == 0:
+                        self.move(piece, move[0], move[1])
+                        if self._check_self(piece.player):
+                            self.move(piece, row, col)
+                            rem_moves.append(move)
+                        elif not self._check_self(piece.player):
+                            pass
+                moveset = list(set(moveset) - set(rem_moves))
+        elif not self._check_self(piece.player):
+            if isinstance(piece, Pawn):
+                if piece.player==W:
+                    moveset = self._pawn_white_moves(row, col)
+                elif piece.player ==B:
+                    moveset = self._pawn_black_moves(row, col)
+                rem_moves = []
+                for move in moveset:
+                    if self.board[move[0]][move[1]] == 0:
+                        self.move(piece, move[0], move[1])
+                        if self._check_self(piece.player):
+                            self.move(piece, row, col)
+                            rem_moves.append(move)
+                        elif not self._check_self(piece.player):
+                            pass
+                moveset = list(set(moveset) - set(rem_moves))
+            elif isinstance(piece, King):
+                if piece.player == W and piece.has_moved == False:
+                    moveset = self._king_white_moves(row, col)
+                    moveset.append(self._whitecastle(row, col))
+                elif piece.player == W and piece.has_moved == True:
+                    moveset = self._king_white_moves(row, col)
+                    rem_moves = []
+                elif piece.player == B and piece.has_moved == False:
+                    moveset = self._king_black_moves(row, col)
+                    moveset.append(self._blackcastle(row,col))
+                elif piece.player == B and piece.has_moved == True:
+                    moveset = self._king_black_moves(row, col)
+                rem_moves = []
+                for move in moveset:
+                    if self.board[move[0]][move[1]] == 0:
+                        self.move(piece, move[0], move[1])
+                        if self._check_self(piece.player):
+                            self.move(piece, row, col)
+                            rem_moves.append(move)
+                        elif not self._check_self(piece.player):
+                            pass
+                moveset = list(set(moveset) - set(rem_moves))
+            elif isinstance(piece, Queen):
+                if piece.player==W:
+                    moveset = self._queen_white_moves(row, col)
+                elif piece.player ==B:
+                    moveset = self._queen_black_moves(row, col)
+                rem_moves = []
+                for move in moveset:
+                    if self.board[move[0]][move[1]] == 0:
+                        self.move(piece, move[0], move[1])
+                        if self._check_self(piece.player):
+                            self.move(piece, row, col)
+                            rem_moves.append(move)
+                        elif not self._check_self(piece.player):
+                            pass
+                moveset = list(set(moveset) - set(rem_moves))
+            elif isinstance(piece, Bishop):
+                if piece.player==W:
+                    moveset = self._bishop_white_moves(row, col)
+                elif piece.player ==B:
+                    moveset = self._bishop_black_moves(row, col)
+                rem_moves = []
+                for move in moveset:
+                    if self.board[move[0]][move[1]] == 0:
+                        self.move(piece, move[0], move[1])
+                        if self._check_self(piece.player):
+                            self.move(piece, row, col)
+                            rem_moves.append(move)
+                        elif not self._check_self(piece.player):
+                            pass
+                moveset = list(set(moveset) - set(rem_moves))
+            elif isinstance(piece, Knight):
+                if piece.player==W:
+                    moveset = self._knight_white_moves(row, col)
+                elif piece.player ==B:
+                    moveset = self._knight_black_moves(row, col)
+                rem_moves = []
+                for move in moveset:
+                    if self.board[move[0]][move[1]] == 0:
+                        self.move(piece, move[0], move[1])
+                        if self._check_self(piece.player):
+                            self.move(piece, row, col)
+                            rem_moves.append(move)
+                        elif not self._check_self(piece.player):
+                            pass
+                moveset = list(set(moveset) - set(rem_moves))
+            elif isinstance(piece, Rook):
+                if piece.player==W:
+                    moveset = self._rook_white_moves(row, col)
+                elif piece.player ==B:
+                    moveset = self._rook_black_moves(row, col)
+                rem_moves = []
+                for move in moveset:
+                    if self.board[move[0]][move[1]] == 0:
+                        self.move(piece, move[0], move[1])
+                        if self._check_self(piece.player):
+                            self.move(piece, row, col)
+                            rem_moves.append(move)
+                        elif not self._check_self(piece.player):
+                            pass
+                moveset = list(set(moveset) - set(rem_moves))
         return moveset
+
+
+
+
+
+
+
+
+
+
+
 
 #####################################################################
 #TODO Add en passant and promotion to pawns
