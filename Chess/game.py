@@ -48,12 +48,14 @@ class Game:
         piece = self.board.get_piece(row, col)
         if self.selected and piece == 0 and (row, col) in self.valid_moves:
             self.board.move(self.selected, row, col)
+            self.board.make_board_rep()
             self.valid_moves = {}
             self.change_turn()
             return True
         elif self.selected and piece != 0 and (row, col) in self.valid_moves:
             self.board.remove(piece)
             self.board.move(self.selected, row, col)
+            self.board.make_board_rep()
             self.valid_moves = {}
             self.change_turn()
             return True

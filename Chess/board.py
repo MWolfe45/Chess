@@ -17,8 +17,10 @@ starting_dict = {'1,1':Rook(0,0,B), '1,2':Knight(0,1,B), '1,3':Bishop(0,2,B), '1
 class Board:
     def __init__(self):
         self.board = []
+        self.board_rep = []
         self.white_pieces = self.black_pieces = {'p':8, 'b':2, 'n':2, 'r':2, 'q':1}
         self.create_board()
+        self.make_board_rep()
 
     def evaluate(self):
 #TODO implement board evaluation method for AI
@@ -57,6 +59,16 @@ class Board:
                     self.board[row].append(0)
                 else:
                     self.board[row].append(piece)
+
+    def make_board_rep(self):
+        for i, row in enumerate(self.board):
+            self.board_rep.append([])
+            for j, col in enumerate(row):
+                if self.board[i][j] == 0:
+                    self.board_rep[i].append(0)
+                else:
+                    self.board_rep[i].append(self.board[i][j].ID)
+
 
     def draw(self, win):
         self.draw_squares(win)

@@ -25,7 +25,6 @@ B = 'Black'
 W = 'White'
 
 
-
 #Colors
 GREEN = (0,102,0)
 TAN = (255,229,204)
