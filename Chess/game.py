@@ -34,7 +34,7 @@ class Game:
         piece = self.board.get_piece(row, col)
         if piece != 0 and piece.player == self.turn:
             self.selected = piece
-            self.valid_moves = self.board.get_valid_moves(piece)
+            self.valid_moves = self.board.examine_moves(piece, self.board.get_valid_moves(piece))
             return True
         return False
 
@@ -48,6 +48,7 @@ class Game:
         piece = self.board.get_piece(row, col)
         if self.selected and piece == 0 and (row, col) in self.valid_moves:
             self.board.move(self.selected, row, col)
+            self.castle(row, col)
             self.board.make_board_rep()
             self.valid_moves = {}
             self.change_turn()
@@ -61,60 +62,6 @@ class Game:
             return True
         else:
             return False
-
-
-
-
-# Looks to see whether the current player is in check
-    def _check_self(self):
-        moves = []
-        for row in self.board.board:
-            for square in row:
-                if square != 0:
-                    if square.player != self.turn:
-                        moves.append(self.board.get_valid_moves(square))
-                    else:
-                        pass
-                else:
-                    pass
-        for row in self.board.board:
-            for square in row:
-                if isinstance(square, King):
-                    if square.player == self.turn:
-                        for move in moves:
-                            if (square.row, square.col) in move:
-                                square.in_check = True
-                                return True
-                            else:
-                                square.in_check = False
-                                pass
-                    else:
-                        pass
-                else:
-                    pass
-
-#Looks to see if a given square is under attack by the other player
-    def check_square_attacked(self, row, col):
-        moves = []
-        for row in self.board.board:
-            for square in row:
-                if square != 0:
-                    if square.player != self.turn:
-                        moves.append(self.board.get_valid_moves(square))
-                    else:
-                        pass
-                else:
-                    pass
-        for move in moves:
-            if (row, col) in move:
-                return True
-        else:
-            pass
-
-
-
-
-
 
 
 #Switches the turn from one player to the other
@@ -131,13 +78,13 @@ class Game:
     def castle(self, row, col):
         if isinstance(self.selected, King) or isinstance(self.selected, Rook):
             self.selected.has_moved = True
-        if isinstance(self.selected, King) and (row,col) in [(7,2)] and self.selected.player == W and not self.check_square_attacked(7,3) and not self._check_self():
+        if isinstance(self.selected, King) and (row,col) in [(7,2)] and self.selected.player == W:
             self.board.whitecastle(row, col)
-        if isinstance(self.selected, King) and (row,col) in [(7,6)] and self.selected.player == W and not self.check_square_attacked(7,5) and not self._check_self():
+        if isinstance(self.selected, King) and (row,col) in [(7,6)] and self.selected.player == W:
             self.board.whitecastle(row, col)
-        if isinstance(self.selected, King) and (row, col) in [(0,2)] and self.selected.player == B and not self.check_square_attacked(0,3) and not self._check_self():
+        if isinstance(self.selected, King) and (row, col) in [(0,2)] and self.selected.player == B:
             self.board.blackcastle(row, col)
-        if isinstance(self.selected, King) and (row, col) in [(0,6)] and self.selected.player == B and not self.check_square_attacked(0,5) and not self._check_self():
+        if isinstance(self.selected, King) and (row, col) in [(0,6)] and self.selected.player == B:
             self.board.blackcastle(row, col)
         if isinstance(self.selected, King) or isinstance(self.selected, Rook):
             self.selected.has_moved = True
