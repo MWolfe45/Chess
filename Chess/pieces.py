@@ -31,12 +31,18 @@ class Pawn(Piece):
     def __init__(self, row, col, player):
         Piece.__init__(self, row, col, player)
         self.ID = 'p'
+        self.promoted = False
+        self.passant = False
 
     def draw_piece(self, win):
         if self.player == B:
             win.blit(B_PAWN, (self.x - B_PAWN.get_width() // 2, self.y - B_PAWN.get_width() // 2))
         elif self.player == W:
             win.blit(W_PAWN, (self.x - W_PAWN.get_width() // 2, self.y - W_PAWN.get_width() // 2))
+
+
+
+
 
 
 

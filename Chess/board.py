@@ -6,10 +6,10 @@ import inspect
 starting_dict = {'1,1':Rook(0,0,B), '1,2':Knight(0,1,B), '1,3':Bishop(0,2,B), '1,4':Queen(0,3,B), '1,5':King(0,4,B), '1,6':Bishop(0,5,B), '1,7':Knight(0,6,B), '1,8':Rook(0,7,B),
                 '2,1':Pawn(1,0,B), '2,2':Pawn(1,1,B), '2,3':Pawn(1,2,B), '2,4':Pawn(1,3,B), '2,5':Pawn(1,4,B), '2,6':Pawn(1,5,B), '2,7':Pawn(1,6,B), '2,8':Pawn(1,7,B),
                 '3,1':0, '3,2':0, '3,3':0, '3,4':0, '3,5':0, '3,6':0, '3,7':0, '3,8':0,
-                '4,1':0, '4,2':0, '4,3':0, '4,4':0, '4,5':0, '4,6':0, '4,7':0, '4,8':0,
+                '4,1':0, '4,2':0, '4,3':Pawn(3,2,W), '4,4':0, '4,5':0, '4,6':0, '4,7':0, '4,8':0,
                 '5,1':0, '5,2':0, '5,3':0, '5,4':0, '5,5':0, '5,6':0, '5,7':0, '5,8':0,
                 '6,1':0, '6,2':0, '6,3':0, '6,4':0, '6,5':0, '6,6':0, '6,7':0, '6,8':0,
-                '7,1':Pawn(6,0,W), '7,2':Pawn(6,1,W), '7,3':Pawn(6,2,W), '7,4':Pawn(6,3,W), '7,5':Pawn(6,4,W), '7,6':Pawn(6,5,W), '7,7':Pawn(6,6,W), '7,8':Pawn(6,7,W),
+                '7,1':Pawn(6,0,W), '7,2':0, '7,3':Pawn(6,2,W), '7,4':Pawn(6,3,W), '7,5':Pawn(6,4,W), '7,6':Pawn(6,5,W), '7,7':Pawn(6,6,W), '7,8':Pawn(6,7,W),
                 '8,1':Rook(7,0,W), '8,2':Knight(7,1,W), '8,3':Bishop(7,2,W), '8,4':Queen(7,3,W), '8,5':King(7,4,W), '8,6':0, '8,7':0, '8,8':Rook(7,7,W)}
 
 
@@ -34,6 +34,10 @@ class Board:
                     pieces.append(piece)
         return pieces
 
+    def trigger_promotion(self, piece):
+        if isinstance(piece, Pawn):
+            if piece.row == 0 or piece.col == 7:
+                piece.promoted = True
 
     def draw_squares(self, win):
         win.fill(GREEN)
@@ -61,13 +65,15 @@ class Board:
                     self.board[row].append(piece)
 
     def make_board_rep(self):
-        for i, row in enumerate(self.board):
+        self.board_rep = []
+        for i, row in enumerate(range(ROWS)):
             self.board_rep.append([])
-            for j, col in enumerate(row):
+            for j, col in enumerate(range(COLS)):
                 if self.board[i][j] == 0:
-                    self.board_rep[i].append(0)
+                    self.board_rep[i].append('0')
                 else:
                     self.board_rep[i].append(self.board[i][j].ID)
+
 
 
     def draw(self, win):
@@ -161,7 +167,7 @@ class Board:
             else:
                 return False
 
-#TODO Castling currently runs off of circular logic, need to figure out how to break loop
+
 
     def examine_moves(self, piece, moves):
         rem_moves = []
@@ -170,6 +176,12 @@ class Board:
             moves.append(self._whitecastle(piece.row, piece.col))
         elif not self._check_self(piece.player) and piece.ID == 'k' and piece.player == B:
             moves.append(self._blackcastle(piece.row, piece.col))
+        elif not self._check_self(piece.player) and piece.ID == 'p' and piece.player == W:
+            if self._white_en_passant_move(piece.row, piece.col):
+                moves.append(self._white_en_passant_move(piece.row, piece.col))
+        elif not self._check_self(piece.player) and piece.ID == 'p' and piece.player == B:
+            if self._black_en_passant_move(piece.row, piece.col):
+                moves.append(self._black_en_passant_move(piece.row, piece.col))
         for move in moves:
             if move:
                 if self.board[move[0]][move[1]] == 0:
@@ -281,6 +293,23 @@ class Board:
                     moves.append((current_row-1, current_col-1))
         return moves
 
+    def _white_en_passant_move(self, current_row, current_col):
+        if current_row == 3:
+            if isinstance(self.board[current_row][current_col - 1], Pawn):
+                if self.board[current_row][current_col - 1].passant == True and self.board[current_row][current_col - 1].player == B:
+                    return ((current_row-1,current_col-1))
+            elif isinstance(self.board[current_row][current_col +1], Pawn):
+                if self.board[current_row][current_col + 1].passant == True and self.board[current_row][current_col + 1].player == B:
+                    return ((current_row-1,current_col+1))
+
+
+    def white_en_passant_capture(self):
+        for file in self.board:
+            for square in file:
+                if isinstance(square, Pawn) and square.player == B:
+                    if square.passant == True:
+                        self.remove(square)
+
     def _pawn_black_moves(self, current_row, current_col):
         moves = [(current_row + 1, current_col)]
         if current_row == 1:
@@ -300,6 +329,25 @@ class Board:
                 if left_attack.player == W:
                     moves.append((current_row + 1, current_col - 1))
         return moves
+
+
+    def _black_en_passant_move(self, current_row, current_col):
+        if current_row == 4:
+            if isinstance(self.board[current_row][current_col - 1], Pawn):
+                if self.board[current_row][current_col - 1].passant == True and self.board[current_row][current_col - 1].player == W:
+                    return ((current_row+1,current_col-1))
+            elif isinstance(self.board[current_row][current_col +1], Pawn):
+                if self.board[current_row][current_col + 1].passant == True and self.board[current_row][current_col + 1].player == W:
+                    return ((current_row+1,current_col+1))
+
+
+    def black_en_passant_capture(self):
+        for file in self.board:
+            for square in file:
+                if isinstance(square, Pawn) and square.player == W:
+                    if square.passant == True:
+                        self.remove(square)
+
 
     def _king_white_moves(self, current_row, current_col):
         moves = [(current_row-1, current_col+1),(current_row, current_col+1),(current_row+1, current_col+1),
