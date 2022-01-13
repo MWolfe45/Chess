@@ -48,8 +48,12 @@ def main():
                 game.select(row, col)
         if game.white_promote == True:
             game.white_popup()
+            game.white_promote = False
+            # game.update()
         elif game.black_promote == True:
             game.black_popup()
+            game.black_promote = False
+            # game.update()
         else:
             game.update()
 

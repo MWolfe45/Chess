@@ -37,28 +37,45 @@ class Game:
         D = popupSurf.blit(W_KNIGNT, (240, 30))
 
         popupRect = popupSurf.get_rect()
-        popupRect.centerx = WIDTH/2
-        popupRect.centery = WIDTH/2
+        # popupRect.centerx = WIDTH/2
+        # popupRect.centery = WIDTH/2
         self.win.blit(popupSurf, popupRect)
         pygame.display.update()
-        while True:
+        run = True
+        while run:
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     ## if mouse is pressed get position of cursor ##
                     pos = pygame.mouse.get_pos()
                     ## check if cursor is on button ##
                     if A.collidepoint(pos):
-                        print('FUCK')
-                        return
+                        row, col = self.selected.row, self.selected.col
+                        player = self.selected.player
+                        self.board.remove(self.selected)
+                        self.board.board[row][col] = Rook(row, col, player)
+                        run = False
+
                     elif B.collidepoint(pos):
-                        print('FUCK YOU')
-                        return
+                        row, col = self.selected.row, self.selected.col
+                        player = self.selected.player
+                        self.board.remove(self.selected)
+                        self.board.board[row][col] = Queen(row, col, player)
+                        run = False
+
                     elif C.collidepoint(pos):
-                        print('I"M SO TIRED')
-                        return
+                        row, col = self.selected.row, self.selected.col
+                        player = self.selected.player
+                        self.board.remove(self.selected)
+                        self.board.board[row][col] = Bishop(row, col, player)
+                        run = False
+
                     elif D.collidepoint(pos):
-                        print('Please work')
-                        return
+                        row, col = self.selected.row, self.selected.col
+                        player = self.selected.player
+                        self.board.remove(self.selected)
+                        self.board.board[row][col] = Knight(row, col, player)
+                        run = False
+
 
 
     def black_popup(self):
@@ -66,27 +83,51 @@ class Game:
         self.draw_valid_moves(self.valid_moves)
         popupSurf = pygame.Surface((300,100))
         popupSurf.fill(NIKI)
-        A = pygame.Rect()
-        B = pygame.Rect()
-        C = pygame.Rect()
-        D = pygame.Rect()
-        spaces = [A, B, C, D]
-        options = [B_ROOK,
-                   B_QUEEN,
-                   B_BISHOP,
-                   B_KNIGNT]
-        result = zip(spaces, options)
-        vert = 30
-        hori = 15
-        for i, j in result:
-            popupSurf.blit(i, (hori,vert))
-            popupSurf.blit(j, (hori, vert))
-            hori += 75
+
+        A = popupSurf.blit(B_ROOK, (15,30))
+        B = popupSurf.blit(B_QUEEN, (90, 30))
+        C = popupSurf.blit(B_BISHOP, (165, 30))
+        D = popupSurf.blit(B_KNIGNT, (240, 30))
+
         popupRect = popupSurf.get_rect()
-        popupRect.centerx = WIDTH/2
-        popupRect.centery = WIDTH/2
+        # popupRect.centerx = WIDTH/2
+        # popupRect.centery = WIDTH/2
         self.win.blit(popupSurf, popupRect)
         pygame.display.update()
+        run = True
+        while run:
+            for event in pygame.event.get():
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    ## if mouse is pressed get position of cursor ##
+                    pos = pygame.mouse.get_pos()
+                    ## check if cursor is on button ##
+                    if A.collidepoint(pos):
+                        row, col = self.selected.row, self.selected.col
+                        player = self.selected.player
+                        self.board.remove(self.selected)
+                        self.board.board[row][col] = Rook(row, col, player)
+                        run = False
+
+                    elif B.collidepoint(pos):
+                        row, col = self.selected.row, self.selected.col
+                        player = self.selected.player
+                        self.board.remove(self.selected)
+                        self.board.board[row][col] = Queen(row, col, player)
+                        run = False
+
+                    elif C.collidepoint(pos):
+                        row, col = self.selected.row, self.selected.col
+                        player = self.selected.player
+                        self.board.remove(self.selected)
+                        self.board.board[row][col] = Bishop(row, col, player)
+                        run = False
+
+                    elif D.collidepoint(pos):
+                        row, col = self.selected.row, self.selected.col
+                        player = self.selected.player
+                        self.board.remove(self.selected)
+                        self.board.board[row][col] = Knight(row, col, player)
+                        run = False
 
 
     def reset(self):
