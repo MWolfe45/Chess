@@ -2,6 +2,8 @@ import pygame
 from Chess.constants import *
 from Chess.board import *
 import inspect
+pygame.init()
+BASICFONT = pygame.font.SysFont('arial',25, False, False)
 
 class Game:
     def __init__(self,win):
@@ -9,6 +11,8 @@ class Game:
         self.win = win
         self.turn_no = 0
         self.move_record = {}
+        self.white_promote = False
+        self.black_promote = False
 
     def update(self):
         self.board.draw(self.win)
@@ -18,8 +22,72 @@ class Game:
     def _init(self):
         self.selected = None
         self.board = Board()
-        self.turn = B
+        self.turn = W
         self.valid_moves = []
+
+    def white_popup(self):
+        self.board.draw(self.win)
+        self.draw_valid_moves(self.valid_moves)
+        popupSurf = pygame.Surface((300,100))
+        popupSurf.fill(NIKI)
+
+        A = popupSurf.blit(W_ROOK, (15,30))
+        B = popupSurf.blit(W_QUEEN, (90, 30))
+        C = popupSurf.blit(W_BISHOP, (165, 30))
+        D = popupSurf.blit(W_KNIGNT, (240, 30))
+
+        popupRect = popupSurf.get_rect()
+        popupRect.centerx = WIDTH/2
+        popupRect.centery = WIDTH/2
+        self.win.blit(popupSurf, popupRect)
+        pygame.display.update()
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    ## if mouse is pressed get position of cursor ##
+                    pos = pygame.mouse.get_pos()
+                    ## check if cursor is on button ##
+                    if A.collidepoint(pos):
+                        print('FUCK')
+                        return
+                    elif B.collidepoint(pos):
+                        print('FUCK YOU')
+                        return
+                    elif C.collidepoint(pos):
+                        print('I"M SO TIRED')
+                        return
+                    elif D.collidepoint(pos):
+                        print('Please work')
+                        return
+
+
+    def black_popup(self):
+        self.board.draw(self.win)
+        self.draw_valid_moves(self.valid_moves)
+        popupSurf = pygame.Surface((300,100))
+        popupSurf.fill(NIKI)
+        A = pygame.Rect()
+        B = pygame.Rect()
+        C = pygame.Rect()
+        D = pygame.Rect()
+        spaces = [A, B, C, D]
+        options = [B_ROOK,
+                   B_QUEEN,
+                   B_BISHOP,
+                   B_KNIGNT]
+        result = zip(spaces, options)
+        vert = 30
+        hori = 15
+        for i, j in result:
+            popupSurf.blit(i, (hori,vert))
+            popupSurf.blit(j, (hori, vert))
+            hori += 75
+        popupRect = popupSurf.get_rect()
+        popupRect.centerx = WIDTH/2
+        popupRect.centery = WIDTH/2
+        self.win.blit(popupSurf, popupRect)
+        pygame.display.update()
+
 
     def reset(self):
         self._init()
@@ -56,7 +124,10 @@ class Game:
             self.board.move(self.selected, row, col)
             self.castle(row, col)
             self.en_pass()
-            self.board.trigger_promotion(self.selected)
+            if self.board.trigger_promotion(self.selected) and self.selected.player == W:
+                self.white_promote = True
+            elif self.board.trigger_promotion(self.selected) and self.selected.player == B:
+                self.black_promote = True
             self.board.make_board_rep()
             for file in self.board.board:
                 for square in file:
@@ -69,7 +140,10 @@ class Game:
         elif self.selected and piece != 0 and (row, col) in self.valid_moves:
             self.board.remove(piece)
             self.board.move(self.selected, row, col)
-            self.board.trigger_promotion(self.selected)
+            if self.board.trigger_promotion(self.selected) and self.selected.player == W:
+                self.white_promote = True
+            elif self.board.trigger_promotion(self.selected) and self.selected.player == B:
+                self.black_promote = True
             self.board.make_board_rep()
             for file in self.board.board:
                 for square in file:

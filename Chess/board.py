@@ -4,13 +4,13 @@ from .pieces import *
 import inspect
 
 starting_dict = {'1,1':Rook(0,0,B), '1,2':Knight(0,1,B), '1,3':Bishop(0,2,B), '1,4':Queen(0,3,B), '1,5':King(0,4,B), '1,6':Bishop(0,5,B), '1,7':Knight(0,6,B), '1,8':Rook(0,7,B),
-                '2,1':Pawn(1,0,B), '2,2':Pawn(1,1,B), '2,3':Pawn(1,2,B), '2,4':Pawn(1,3,B), '2,5':Pawn(1,4,B), '2,6':Pawn(1,5,B), '2,7':Pawn(1,6,B), '2,8':Pawn(1,7,B),
+                '2,1':Pawn(1,0,B), '2,2':Pawn(1,1,W), '2,3':Pawn(1,2,B), '2,4':Pawn(1,3,B), '2,5':Pawn(1,4,B), '2,6':Pawn(1,5,B), '2,7':Pawn(1,6,B), '2,8':Pawn(1,7,B),
                 '3,1':0, '3,2':0, '3,3':0, '3,4':0, '3,5':0, '3,6':0, '3,7':0, '3,8':0,
-                '4,1':0, '4,2':0, '4,3':Pawn(3,2,W), '4,4':0, '4,5':0, '4,6':0, '4,7':0, '4,8':0,
+                '4,1':0, '4,2':0, '4,3':0, '4,4':0, '4,5':0, '4,6':0, '4,7':0, '4,8':0,
                 '5,1':0, '5,2':0, '5,3':0, '5,4':0, '5,5':0, '5,6':0, '5,7':0, '5,8':0,
                 '6,1':0, '6,2':0, '6,3':0, '6,4':0, '6,5':0, '6,6':0, '6,7':0, '6,8':0,
-                '7,1':Pawn(6,0,W), '7,2':0, '7,3':Pawn(6,2,W), '7,4':Pawn(6,3,W), '7,5':Pawn(6,4,W), '7,6':Pawn(6,5,W), '7,7':Pawn(6,6,W), '7,8':Pawn(6,7,W),
-                '8,1':Rook(7,0,W), '8,2':Knight(7,1,W), '8,3':Bishop(7,2,W), '8,4':Queen(7,3,W), '8,5':King(7,4,W), '8,6':0, '8,7':0, '8,8':Rook(7,7,W)}
+                '7,1':Pawn(6,0,W), '7,2':Pawn(6,1,W), '7,3':Pawn(6,2,W), '7,4':Pawn(6,3,W), '7,5':Pawn(6,4,W), '7,6':Pawn(6,5,W), '7,7':Pawn(6,6,W), '7,8':Pawn(6,7,W),
+                '8,1':Rook(7,0,W), '8,2':Knight(7,1,W), '8,3':Bishop(7,2,W), '8,4':Queen(7,3,W), '8,5':King(7,4,W), '8,6':Bishop(7,5, W), '8,7':Knight(7,6, W), '8,8':Rook(7,7,W)}
 
 
 
@@ -37,7 +37,7 @@ class Board:
     def trigger_promotion(self, piece):
         if isinstance(piece, Pawn):
             if piece.row == 0 or piece.col == 7:
-                piece.promoted = True
+                return True
 
     def draw_squares(self, win):
         win.fill(GREEN)
@@ -72,7 +72,7 @@ class Board:
                 if self.board[i][j] == 0:
                     self.board_rep[i].append('0')
                 else:
-                    self.board_rep[i].append(self.board[i][j].ID)
+                    self.board_rep[i].append(self.board[i][j].BOARD_ID)
 
 
 
