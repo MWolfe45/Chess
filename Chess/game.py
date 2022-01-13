@@ -13,6 +13,7 @@ class Game:
         self.move_record = {}
         self.white_promote = False
         self.black_promote = False
+        self.winner = None
 
     def update(self):
         self.board.draw(self.win)
@@ -24,6 +25,25 @@ class Game:
         self.board = Board()
         self.turn = W
         self.valid_moves = []
+
+    def ai_move(self, board):
+        self.board = board
+        self.change_turn()
+
+    def winner(self):
+        pieces = self.board.get_all_pieces(self.selected.player)
+        moves = []
+        for piece in pieces:
+            valid_moves = self.board.get_valid_moves(piece)
+            moves.append(valid_moves)
+        if len(valid_moves) == 0:
+            if self.selected.player == W:
+                self.winner = B
+            else:
+                self.winner = W
+        else:
+            self.winner = None
+
 
     def white_popup(self):
         self.board.draw(self.win)
@@ -198,13 +218,15 @@ class Game:
             return False
 
 
-
-#Switches the turn from one player to the other
-    def change_turn(self):
+    def print_board_rep(self):
         self.move_record[self.turn_no] = self.board.board
         print('-------------------------------------------')
         for row in self.board.board_rep:
             print(row)
+
+
+#Switches the turn from one player to the other
+    def change_turn(self):
         if self.turn == W:
             self.turn = B
             self.turn_no += 1

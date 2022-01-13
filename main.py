@@ -2,6 +2,7 @@ import pygame
 from Chess.constants import *
 from Chess.game import *
 from Chess.board import *
+from minimax.algorithm import minimax
 
 # Framerate
 FPS = 60
@@ -33,18 +34,19 @@ def main():
 
     while run:
         clock.tick(FPS)
-        # if game.turn == B:
-            # value, new_board = minimax(game.get_board(), 3, WHITE, game)
-            # game.ai_move(new_board)
-#TODO Add minimax method for chess into program once movement and captures are worked out
-
+        if game.turn == B:
+            value, new_board = minimax(game.board, 1, B, game)
+            game.ai_move(new_board)
+        # if game.winner() != None:
+        #     print(game.winner())
+        #     run = False
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 pos = pygame.mouse.get_pos()
                 row, col = get_mouse_coords(pos)
-                x, y = raw_mouse_coords(pos)
+                # x, y = raw_mouse_coords(pos)
                 game.select(row, col)
         if game.white_promote == True:
             game.white_popup()

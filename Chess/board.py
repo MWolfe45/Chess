@@ -2,6 +2,7 @@ import pygame
 from .constants import *
 from .pieces import *
 import inspect
+from minimax import tables
 
 starting_dict = {'1,1':Rook(0,0,B), '1,2':Knight(0,1,B), '1,3':Bishop(0,2,B), '1,4':Queen(0,3,B), '1,5':King(0,4,B), '1,6':Bishop(0,5,B), '1,7':Knight(0,6,B), '1,8':Rook(0,7,B),
                 '2,1':Pawn(1,0,B), '2,2':Pawn(1,1,B), '2,3':Pawn(1,2,B), '2,4':Pawn(1,3,B), '2,5':Pawn(1,4,B), '2,6':Pawn(1,5,B), '2,7':Pawn(1,6,B), '2,8':Pawn(1,7,B),
@@ -21,10 +22,7 @@ class Board:
         self.white_pieces = self.black_pieces = {'p':8, 'b':2, 'n':2, 'r':2, 'q':1}
         self.create_board()
         self.make_board_rep()
-
-    def evaluate(self):
-#TODO implement board evaluation method for AI
-        pass
+        self.winner = None
 
     def get_all_pieces(self, player):
         pieces = []
@@ -36,7 +34,7 @@ class Board:
 
     def trigger_promotion(self, piece):
         if isinstance(piece, Pawn):
-            if piece.row == 0 or piece.col == 7:
+            if piece.row == 0 or piece.row == 7:
                 return True
 
     def draw_squares(self, win):
@@ -48,7 +46,7 @@ class Board:
     def move(self, piece, row, col):
         self.board[piece.row][piece.col], self.board[row][col] = self.board[row][col], self.board[piece.row][piece.col]
         piece.move(row, col)
-        # INCLUDE ABILITY TO CHANGE PAWN STATUS TO QUEEN/ROOK/KNIGHT/BISHOP
+
 
     def get_piece(self, row, col):
         return self.board[row][col]
@@ -91,7 +89,66 @@ class Board:
 
 
     # def winner(self):
-#TODO Add win conditions
+    #     if self.
+
+    def white_piece_points(self):
+        piece_sum = 0
+        for row in self.board_rep:
+            for square in row:
+                if square in ['P', 'R', 'K', 'N', 'Q', 'B']:
+                    piece_sum += tables.values[square]
+        return piece_sum
+
+    def black_piece_points(self):
+        piece_sum = 0
+        for row in self.board_rep:
+            for square in row:
+                if square in ['p', 'r', 'k', 'n', 'q', 'b']:
+                    piece_sum += tables.values[square]
+        return piece_sum
+
+    def white_position_points(self):
+        position_sum = 0
+        for row, rank in enumerate(self.board_rep):
+            for col, square in enumerate(rank):
+                if square == 'P':
+                    position_sum += tables.w_pawn[row][col]
+                elif square == 'K':
+                    position_sum += tables.w_king[row][col]
+                elif square == 'N':
+                    position_sum += tables.w_knight[row][col]
+                elif square == 'B':
+                    position_sum += tables.w_bishop[row][col]
+                elif square == 'R':
+                    position_sum += tables.w_rook[row][col]
+                elif square == 'Q':
+                    position_sum += tables.w_queen[row][col]
+        return position_sum
+
+    def black_position_points(self):
+        position_sum = 0
+        for row, rank in enumerate(self.board_rep):
+            for col, square in enumerate(rank):
+                if square == 'p':
+                    position_sum += tables.b_pawn[row][col]
+                elif square == 'k':
+                    position_sum += tables.b_king[row][col]
+                elif square == 'n':
+                    position_sum += tables.b_knight[row][col]
+                elif square == 'b':
+                    position_sum += tables.b_bishop[row][col]
+                elif square == 'r':
+                    position_sum += tables.b_rook[row][col]
+                elif square == 'q':
+                    position_sum += tables.b_queen[row][col]
+        return position_sum
+
+# Algorithm evaluating every hypothetical position as though it's the starting position
+    def board_eval(self):
+        board_state = self.board_rep
+        result = self.white_piece_points() + self.white_position_points() + self.black_piece_points() + self.black_position_points()
+        return result
+
 
     def _check_self(self, player):
         moves = []
