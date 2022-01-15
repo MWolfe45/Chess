@@ -84,7 +84,7 @@ class Board:
 
 
 #TODO Add method for piece accounting after capture
-    def remove(self, piece):
+    def remove_piece(self, piece):
         self.board[piece.row][piece.col] = 0
 
 
@@ -230,9 +230,11 @@ class Board:
         rem_moves = []
         row, col = piece.row, piece.col
         if not self._check_self(piece.player) and piece.ID == 'k' and piece.player == W:
-            moves.append(self._whitecastle(piece.row, piece.col))
+            if self._whitecastle(piece.row, piece.col):
+                moves.append(self._whitecastle(piece.row, piece.col))
         elif not self._check_self(piece.player) and piece.ID == 'k' and piece.player == B:
-            moves.append(self._blackcastle(piece.row, piece.col))
+            if self._blackcastle(piece.row, piece.col):
+                moves.append(self._blackcastle(piece.row, piece.col))
         elif not self._check_self(piece.player) and piece.ID == 'p' and piece.player == W:
             if self._white_en_passant_move(piece.row, piece.col):
                 moves.append(self._white_en_passant_move(piece.row, piece.col))
@@ -250,7 +252,7 @@ class Board:
                         self.move(piece, row, col)
                 elif self.board[move[0]][move[1]] != 0:
                     hold_piece = self.board[move[0]][move[1]]
-                    self.remove(self.board[move[0]][move[1]])
+                    self.remove_piece(self.board[move[0]][move[1]])
                     self.move(piece, move[0], move[1])
                     if self._check_self(piece.player):
                         self.move(piece, row, col)
@@ -425,14 +427,17 @@ class Board:
 
 
     def _whitecastle(self, current_row, current_col):
-        if self.board[7][0].ID == 'r':
-            if not self.board[current_row][current_col].has_moved and not self.board[7][0].has_moved and self.board[7][1] == 0 and self.board[7][2] == 0:
-                if not self.check_square_attacked(7,2,W) and not self.check_square_attacked(7,3,W):
-                    return (7,2)
-        if self.board[7][7].ID == 'r':
-            if not self.board[current_row][current_col].has_moved and not self.board[7][7].has_moved and self.board[7][6] == 0 and self.board[7][5] == 0:
-                if not self.check_square_attacked(7, 6, W) and not self.check_square_attacked(7, 5, W):
-                    return (7,6)
+        if self.board[7][0] != 0:
+            if self.board[7][0].ID == 'r':
+                if not self.board[current_row][current_col].has_moved and not self.board[7][0].has_moved and self.board[7][1] == 0 and self.board[7][2] == 0:
+                    if not self.check_square_attacked(7,2,W) and not self.check_square_attacked(7,3,W):
+                        return (7,2)
+        elif self.board[7][7] != 0:
+            if self.board[7][7].ID == 'r':
+                if not self.board[current_row][current_col].has_moved and not self.board[7][7].has_moved and self.board[7][6] == 0 and self.board[7][5] == 0:
+                    if not self.check_square_attacked(7, 6, W) and not self.check_square_attacked(7, 5, W):
+                        return (7,6)
+
 
 
     def whitecastle(self, row, col):
@@ -461,14 +466,16 @@ class Board:
         return moves
 
     def _blackcastle(self, current_row, current_col):
-        if self.board[0][0].ID == 'r':
-            if not self.board[current_row][current_col].has_moved and not self.board[0][0].has_moved and self.board[0][1] == 0 and self.board[0][2] == 0:
-                if not self.check_square_attacked(0, 2, B) and not self.check_square_attacked(0, 3, B):
-                    return (0, 2)
-        elif self.board[0][7].ID == 'r':
-            if not self.board[current_row][current_col].has_moved and not self.board[7][7].has_moved and self.board[7][6] == 0 and self.board[7][5] == 0:
-                if not self.check_square_attacked(0, 4, B) and not self.check_square_attacked(0, 5, B):
-                    return (0, 6)
+        if self.board [0][0] != 0:
+            if self.board[0][0].ID == 'r':
+                if not self.board[current_row][current_col].has_moved and not self.board[0][0].has_moved and self.board[0][1] == 0 and self.board[0][2] == 0:
+                    if not self.check_square_attacked(0, 2, B) and not self.check_square_attacked(0, 3, B):
+                        return (0, 2)
+        elif self.board[0][7] != 0:
+            if self.board[0][7].ID == 'r':
+                if not self.board[current_row][current_col].has_moved and not self.board[7][7].has_moved and self.board[7][6] == 0 and self.board[7][5] == 0:
+                    if not self.check_square_attacked(0, 4, B) and not self.check_square_attacked(0, 5, B):
+                        return (0, 6)
 
     def blackcastle(self, row, col):
         if (row, col) == (0,2):

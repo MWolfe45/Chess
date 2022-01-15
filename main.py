@@ -35,7 +35,7 @@ def main():
     while run:
         clock.tick(FPS)
         if game.turn == B:
-            value, new_board = minimax(game.board, 1, B, game)
+            value, new_board = minimax(game.board, 2, B, game)
             game.ai_move(new_board)
         # if game.winner() != None:
         #     print(game.winner())
@@ -46,7 +46,6 @@ def main():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 pos = pygame.mouse.get_pos()
                 row, col = get_mouse_coords(pos)
-                # x, y = raw_mouse_coords(pos)
                 game.select(row, col)
         if game.white_promote == True:
             game.white_popup()

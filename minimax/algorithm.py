@@ -26,7 +26,7 @@ def minimax(position, depth, min_player, game):
         best_move = None
         for move in get_all_moves(position, WHITE, game):
             evaluation = minimax(move, depth-1, True, game)[0]
-            maxEval = min(maxEval, evaluation)
+            maxEval = max(maxEval, evaluation)
             if maxEval == evaluation:
                 best_move = move
         return maxEval, best_move
@@ -34,7 +34,7 @@ def minimax(position, depth, min_player, game):
 def get_all_moves(board, color, game):
     moves = []
     for piece in board.get_all_pieces(color):
-        valid_moves = board.get_valid_moves(piece)
+        valid_moves = board.examine_moves(piece, board.get_valid_moves(piece))
         for move in valid_moves:
             temp_board = deepcopy(board)
             temp_piece = temp_board.get_piece(piece.row, piece.col)
@@ -44,5 +44,12 @@ def get_all_moves(board, color, game):
     return moves
 
 def simulate_move(piece, move, board, game):
-    board.move(piece, move[0], move[1])
+    if board.board[move[0]][move[1]] == 0:
+        board.move(piece, move[0], move[1])
+    elif board.board[move[0]][move[1]] != 0:
+        if board.board[move[0]][move[1]].player != piece.player:
+            board.remove_piece(board.board[move[0]][move[1]])
+            board.move(piece, move[0], move[1])
+        else:
+            pass
     return board

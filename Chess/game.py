@@ -71,28 +71,28 @@ class Game:
                     if A.collidepoint(pos):
                         row, col = self.selected.row, self.selected.col
                         player = self.selected.player
-                        self.board.remove(self.selected)
+                        self.board.remove_piece(self.selected)
                         self.board.board[row][col] = Rook(row, col, player)
                         run = False
 
                     elif B.collidepoint(pos):
                         row, col = self.selected.row, self.selected.col
                         player = self.selected.player
-                        self.board.remove(self.selected)
+                        self.board.remove_piece(self.selected)
                         self.board.board[row][col] = Queen(row, col, player)
                         run = False
 
                     elif C.collidepoint(pos):
                         row, col = self.selected.row, self.selected.col
                         player = self.selected.player
-                        self.board.remove(self.selected)
+                        self.board.remove_piece(self.selected)
                         self.board.board[row][col] = Bishop(row, col, player)
                         run = False
 
                     elif D.collidepoint(pos):
                         row, col = self.selected.row, self.selected.col
                         player = self.selected.player
-                        self.board.remove(self.selected)
+                        self.board.remove_piece(self.selected)
                         self.board.board[row][col] = Knight(row, col, player)
                         run = False
 
@@ -124,28 +124,28 @@ class Game:
                     if A.collidepoint(pos):
                         row, col = self.selected.row, self.selected.col
                         player = self.selected.player
-                        self.board.remove(self.selected)
+                        self.board.remove_piece(self.selected)
                         self.board.board[row][col] = Rook(row, col, player)
                         run = False
 
                     elif B.collidepoint(pos):
                         row, col = self.selected.row, self.selected.col
                         player = self.selected.player
-                        self.board.remove(self.selected)
+                        self.board.remove_piece(self.selected)
                         self.board.board[row][col] = Queen(row, col, player)
                         run = False
 
                     elif C.collidepoint(pos):
                         row, col = self.selected.row, self.selected.col
                         player = self.selected.player
-                        self.board.remove(self.selected)
+                        self.board.remove_piece(self.selected)
                         self.board.board[row][col] = Bishop(row, col, player)
                         run = False
 
                     elif D.collidepoint(pos):
                         row, col = self.selected.row, self.selected.col
                         player = self.selected.player
-                        self.board.remove(self.selected)
+                        self.board.remove_piece(self.selected)
                         self.board.board[row][col] = Knight(row, col, player)
                         run = False
 
@@ -199,7 +199,7 @@ class Game:
             self.change_turn()
             return True
         elif self.selected and piece != 0 and (row, col) in self.valid_moves:
-            self.board.remove(piece)
+            self.board.remove_piece(piece)
             self.board.move(self.selected, row, col)
             if self.board.trigger_promotion(self.selected) and self.selected.player == W:
                 self.white_promote = True
