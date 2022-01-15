@@ -11,7 +11,7 @@ starting_dict = {'1,1':Rook(0,0,B), '1,2':Knight(0,1,B), '1,3':Bishop(0,2,B), '1
                 '5,1':0, '5,2':0, '5,3':0, '5,4':0, '5,5':0, '5,6':0, '5,7':0, '5,8':0,
                 '6,1':0, '6,2':0, '6,3':0, '6,4':0, '6,5':0, '6,6':0, '6,7':0, '6,8':0,
                 '7,1':Pawn(6,0,W), '7,2':Pawn(6,1,W), '7,3':Pawn(6,2,W), '7,4':Pawn(6,3,W), '7,5':Pawn(6,4,W), '7,6':Pawn(6,5,W), '7,7':Pawn(6,6,W), '7,8':Pawn(6,7,W),
-                '8,1':Rook(7,0,W), '8,2':Knight(7,1,W), '8,3':Bishop(7,2,W), '8,4':Queen(7,3,W), '8,5':King(7,4,W), '8,6':Bishop(7,5, W), '8,7':Knight(7,6, W), '8,8':Rook(7,7,W)}
+                '8,1':Rook(7,0,W), '8,2':Knight(7,1,W), '8,3':Bishop(7,2,W), '8,4':Queen(7,3,W), '8,5':King(7,4,W), '8,6':0, '8,7':0, '8,8':Rook(7,7,W)}
 
 
 
@@ -432,7 +432,7 @@ class Board:
                 if not self.board[current_row][current_col].has_moved and not self.board[7][0].has_moved and self.board[7][1] == 0 and self.board[7][2] == 0:
                     if not self.check_square_attacked(7,2,W) and not self.check_square_attacked(7,3,W):
                         return (7,2)
-        elif self.board[7][7] != 0:
+        if self.board[7][7] != 0:
             if self.board[7][7].ID == 'r':
                 if not self.board[current_row][current_col].has_moved and not self.board[7][7].has_moved and self.board[7][6] == 0 and self.board[7][5] == 0:
                     if not self.check_square_attacked(7, 6, W) and not self.check_square_attacked(7, 5, W):
@@ -471,9 +471,9 @@ class Board:
                 if not self.board[current_row][current_col].has_moved and not self.board[0][0].has_moved and self.board[0][1] == 0 and self.board[0][2] == 0:
                     if not self.check_square_attacked(0, 2, B) and not self.check_square_attacked(0, 3, B):
                         return (0, 2)
-        elif self.board[0][7] != 0:
+        if self.board[0][7] != 0:
             if self.board[0][7].ID == 'r':
-                if not self.board[current_row][current_col].has_moved and not self.board[7][7].has_moved and self.board[7][6] == 0 and self.board[7][5] == 0:
+                if not self.board[current_row][current_col].has_moved and not self.board[0][7].has_moved and self.board[7][6] == 0 and self.board[7][5] == 0:
                     if not self.check_square_attacked(0, 4, B) and not self.check_square_attacked(0, 5, B):
                         return (0, 6)
 
